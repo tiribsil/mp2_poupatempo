@@ -1,0 +1,54 @@
+﻿* Miniprojeto Web MVC  - 
+
+
+Fundamentos envolvidos: MVC Java + BD + AJAX
+
+
+Data de entrega: 30/11/2026 (envio via Classroom)
+
+
+Apresentação: 01/12/2026
+
+
+Data máxima para esclarecimento de dúvidas: 24/11/2026
+As dúvidas somente serão esclarecidas presencialmente ou no horário de atendimento da disciplina ou em espaços durante as aulas.
+
+
+Orientações gerais:
+1. Seu grupo foi contratado para desenvolver um sistema web de gerenciamento de filas de atendimento do Poupatempo. O sistema deverá controlar a emissão de senhas, a fila de espera, a chamada dos usuários e o andamento dos atendimentos. Uma senha poderá assumir diferentes estados durante sua existência: AGUARDANDO, CHAMADA, EM ATENDIMENTO, FINALIZADA ou AUSENTE.
+2. A aplicação deverá possuir três interfaces independentes. A primeira interface será voltada para o usuário que deseja obter uma senha de atendimento. A segunda interface será utilizada pelos funcionários responsáveis pelo atendimento. A terceira interface funcionará como um painel público para apresentação das senhas chamadas. As alterações realizadas em uma interface deverão refletir nas demais quando necessário, sem que seja preciso realizar refresh manual no browser.
+3. Na interface de emissão de senhas, o usuário deverá selecionar o tipo de atendimento desejado e informar se possui ou não direito a atendimento prioritário. Após a solicitação, o sistema deverá gerar uma senha e apresentar, no mínimo, o número da senha, o tipo de atendimento, sua condição de prioridade e a quantidade de pessoas aguardando atendimento antes dela.
+4. O sistema deverá possuir pelo menos três tipos diferentes de atendimento. Cabe ao grupo definir os tipos que serão utilizados em sua aplicação.
+5. Na interface do atendente, o funcionário deverá estar associado a um determinado guichê. Os guichês poderão realizar todos os tipos de atendimento ou apenas alguns deles. Essa informação deverá ser armazenada no banco de dados.
+6. O atendente deverá poder consultar informações da fila, solicitar ao sistema a próxima senha, iniciar um atendimento, finalizar um atendimento e indicar que o usuário chamado não compareceu. O atendente não poderá escolher manualmente qualquer senha da fila. Ao selecionar a opção para chamar a próxima senha, deverá ser o sistema que determinará qual senha deverá ser atendida, considerando as regras de negócio definidas neste documento.
+7. O sistema deverá possuir, no mínimo, uma fila normal e uma fila prioritária. As senhas prioritárias deverão possuir preferência sobre as senhas normais. Entretanto, a existência de senhas prioritárias não poderá impedir indefinidamente o atendimento das senhas normais. Depois de duas senhas prioritárias consecutivas, caso exista uma senha normal aguardando atendimento e compatível com aquele guichê, a próxima chamada deverá obrigatoriamente ser de uma senha normal. Após essa chamada, a regra de prioridade volta a ser aplicada.
+8. Um atendente somente poderá chamar uma senha correspondente a um tipo de atendimento disponível em seu guichê. A determinação da próxima senha deverá obrigatoriamente ser realizada no servidor. A interface do atendente deverá apenas solicitar que a próxima senha seja chamada. Cabe à aplicação verificar as senhas que estão aguardando, seus tipos de atendimento, sua prioridade, sua ordem de chegada, as características do guichê e as regras de alternância entre atendimento prioritário e normal.
+9. Quando uma senha for chamada, ela deverá deixar de estar disponível para outros guichês. O sistema deverá garantir que dois atendentes não consigam chamar simultaneamente a mesma senha.
+10. Quando o usuário comparecer ao guichê, o atendente deverá iniciar o atendimento. O horário de emissão da senha, o horário da chamada, o início do atendimento e o término do atendimento deverão ser armazenados.
+11. A terceira interface da aplicação deverá funcionar como um painel público. Esse painel deverá apresentar, no mínimo, a senha chamada, o guichê responsável pelo atendimento e as últimas senhas chamadas. O painel deverá ser atualizado automaticamente sempre que ocorrer uma nova chamada, sem intervenção do usuário e sem refresh manual do browser.
+12. As três interfaces deverão funcionar de forma independente. Não deverá haver redirecionamento direto entre elas. Para facilitar a demonstração do projeto, recomenda-se abrir cada interface em uma aba ou janela diferente durante a apresentação.
+13. É obrigatório utilizar AJAX para as atualizações assíncronas da aplicação.
+14. A aplicação deverá ser desenvolvida utilizando MVC Java, Vue.js para o front-end e AJAX para as atualizações assíncronas.
+15. É obrigatória a estilização das páginas visualizadas pelos usuários. Cabe ao grupo decidir que tecnologia utilizará para estilização. É permitido utilizar bibliotecas, desde que elas sejam declaradas no relatório.
+16. Não faz parte do projeto o CRUD de cadastro de usuários. Sua nota não irá mudar caso o grupo implemente esse módulo e ele não será considerado na correção.
+17. Você pode escolher o banco de dados que deseja utilizar. Não precisa ser exclusivamente MySQL. Entretanto, caso seja utilizado outro banco de dados, deverão ser fornecidas todas as informações necessárias para que a aplicação possa ser executada durante a correção.
+18. A especificação apresentada neste documento define os requisitos mínimos obrigatórios do sistema e não deve ser interpretada como uma especificação completa do projeto. O grupo deverá compreender o problema e realizar a elicitação de requisitos complementares necessários para que a aplicação seja coerente e adequada ao domínio proposto. O grupo deverá identificar situações, informações, validações, regras, fluxos ou funcionalidades adicionais que sejam necessárias ou relevantes para o funcionamento da aplicação. Esses requisitos adicionais deverão ser coerentes com o domínio, não poderão contradizer os requisitos obrigatórios apresentados nesta especificação e deverão ser efetivamente implementados.
+19. Os requisitos adicionais identificados pelo grupo deverão ser apresentados no relatório em uma seção denominada “Requisitos elicitados pelo grupo”. A capacidade de compreender o problema e identificar requisitos que não estão explicitamente descritos nesta especificação também fará parte da avaliação do projeto.
+20. Embora seja um único projeto para todos os grupos, as soluções deverão ser desenvolvidas de forma independente. Soluções iguais ou excessivamente similares provenientes de grupos diferentes estarão sujeitas às penalidades definidas pela professora.
+21. Todos os integrantes do grupo deverão participar efetivamente da implementação do código da aplicação web. Como esta é uma disciplina de programação web, não será considerada participação suficiente um integrante ficar responsável exclusivamente pelo banco de dados, pelo relatório, pela documentação, pelo levantamento de requisitos, pelos testes ou pela apresentação.Um integrante que tenha participado apenas da implementação ou configuração do banco de dados, sem participação no desenvolvimento do código web,terá nota zero.
+22. Você deverá usar o VSCode ou o CodeSpaces do Git para desenvolver o seu projeto.
+Caso use o VSCode, a entrega será composta de uma pasta compactada contendo os elementos a seguir. 
+Se for usar o CodeSpaces, pode compartilhar o link da versão congelada na data da entrega. O relatório deve contar o link compartilhado.
+1. Código fonte:
+a. todos os arquivos front-end e back-end que fazem parte da aplicação;
+b. pode compactar a pasta inteira do projeto do VSCode.
+2. Relatório do projeto contendo:
+a. capa com dados do miniprojeto e nome e RA dos integrantes do grupo;
+b. uma explicação sucinta da parte que cada membro do grupo implementou;
+c. a indicação dos principais arquivos, classes, componentes ou funcionalidades implementados por cada integrante;
+d. uma seção denominada “Requisitos elicitados pelo grupo”, apresentando os requisitos adicionais identificados durante a análise do problema e efetivamente implementados na aplicação;
+e. uma explicação sucinta de como está organizada a arquitetura MVC da aplicação, apontando a função dos principais arquivos ou componentes da arquitetura. Pode ser utilizada uma imagem para auxiliar essa explicação;
+f. uma visão da estrutura do banco de dados;
+g. a relação das bibliotecas ou outros recursos externos utilizados na aplicação, indicando em que parte foram utilizados e fornecendo os respectivos links;
+h. caso esteja sendo utilizado um banco de dados ao qual a professora não possua acesso remoto durante a execução do projeto, deverão ser fornecidos os scripts das tabelas e os dados necessários para que o banco possa ser criado e populado. Esses arquivos deverão ser entregues separadamente e não apenas inseridos no relatório;
+i. na entrega, o banco de dados deverá estar previamente populado com dados suficientes para permitir a demonstração das funcionalidades e das regras de negócio da aplicação.
