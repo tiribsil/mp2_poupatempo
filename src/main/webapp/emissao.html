@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Totem de Emissão de Senhas - Poupatempo</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+</head>
+<body>
+
+    <header class="cabecalho-principal">
+        <div>
+            <h1>POUPATEMPO</h1>
+            <div class="cabecalho-subtitulo">Totem de Autoatendimento - Emissão de Senha</div>
+        </div>
+    </header>
+
+    <main class="conteudo-principal" id="aplicativo-emissao"> <!-- Tag do vue -->
+        <section class="cartao" style="max-width: 600px; margin: 0 auto;">
+            <h2>Retirar Senha de Atendimento</h2>
+
+            <div v-if="mensagemDeErro" class="mensagem-alerta alerta-erro">
+                {{ mensagemDeErro }}
+            </div>
+
+            <div v-if="mensagemDeSucesso" class="mensagem-alerta alerta-sucesso">
+                {{ mensagemDeSucesso }}
+            </div>
+
+            <form v-if="!senhaEmitida" @submit.prevent="emitirSenha">
+                <div class="grupo-formulario">
+                    <label for="campo-tipo">Selecione o Serviço Desejado:</label>
+                    <select id="campo-tipo" v-model="identificadorTipoSelecionado" class="campo-selecao" required>
+                        <option value="" disabled>Escolha um tipo de atendimento...</option>
+                        <option v-for="tipo in listaDeTiposDeAtendimento" :key="tipo.identificador" :value="tipo.identificador">
+                            {{ tipo.nome }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="grupo-formulario" style="margin: 1.5rem 0;">
+                    <label class="opcao-checkbox">
+                        <input type="checkbox" v-model="atendimentoPrioritario">
+                        <span>Possui direito a atendimento prioritário? (Lei Federal 10.048/00)</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="botao botao-primario" style="width: 100%;" :disabled="carregando">
+                    {{ carregando ? 'Gerando Senha...' : 'Emitir Senha' }}
+                </button>
+            </form>
+
+            <div v-else class="recibo-senha">
+                <span :class="['etiqueta-prioridade', senhaEmitida.atendimentoPrioritario ? 'etiqueta-prioritaria' : 'etiqueta-normal']">
+                    {{ senhaEmitida.atendimentoPrioritario ? 'ATENDIMENTO PRIORITÁRIO' : 'ATENDIMENTO CONVENCIONAL' }}
+                </span>
+
+                <div class="numero-destaque">{{ senhaEmitida.numeroDaSenha }}</div>
+
+                <div style="font-weight: 600; color: var(--cor-texto); margin-bottom: 0.5rem;">
+                    {{ senhaEmitida.tipoDeAtendimento }}
+                </div>
+
+                <div class="info-aguardando">
+                    Pessoas aguardando antes de você:
+                    <strong>{{ senhaEmitida.quantidadeDePessoasAguardandoAntes }}</strong>
+                </div>
+
+                <div style="font-size: 0.85rem; color: var(--cor-texto-suave); margin-top: 1rem;">
+                    Emitida em: {{ senhaEmitida.instanteDeEmissao }}
+                </div>
+
+                <button type="button" @click="limparRecibo" class="botao botao-primario" style="margin-top: 1.5rem; width: 100%;">
+                    Emitir Nova Senha
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="rodape-principal">
+        Poupatempo - Emissão de Senhas
+    </footer>
+
+    <script src="js/emissaoApp.js"></script>
+</body>
+</html>

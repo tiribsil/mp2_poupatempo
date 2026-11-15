@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Atendente - Poupatempo</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+</head>
+<body>
+
+    <header class="cabecalho-principal">
+        <div>
+            <h1>POUPATEMPO</h1>
+            <div class="cabecalho-subtitulo">Terminal de Atendimento ao Cidadão</div>
+        </div>
+    </header>
+
+    <main class="conteudo-principal" id="aplicativo-atendente">
+        <section class="cartao">
+            <h2>Configuração do Posto de Atendimento</h2>
+            
+            <div class="grupo-formulario" style="max-width: 400px;">
+                <label for="seletor-guiche">Selecione seu Guichê de Trabalho:</label>
+                <select id="seletor-guiche" v-model="numeroDoGuicheSelecionado" @change="trocarGuiche" class="campo-selecao">
+                    <option v-for="g in listaDeGuiches" :key="g.id" :value="g.numero">
+                        Guichê {{ g.numero }}
+                    </option>
+                </select>
+            </div>
+
+            <div v-if="guicheSelecionado" style="font-size: 0.95rem; color: var(--cor-texto-suave);">
+                <strong>Serviços atendidos por este guichê:</strong>
+                <span v-for="(tipo, idx) in guicheSelecionado.tiposDeAtendimentoAtendidos" :key="tipo.identificador">
+                    {{ tipo.nome }}<span v-if="idx < guicheSelecionado.tiposDeAtendimentoAtendidos.length - 1">, </span>
+                </span>
+            </div>
+        </section>
+
+        <div v-if="mensagemDeErro" class="mensagem-alerta alerta-erro">
+            {{ mensagemDeErro }}
+        </div>
+
+        <div v-if="mensagemDeSucesso" class="mensagem-alerta alerta-sucesso">
+            {{ mensagemDeSucesso }}
+        </div>
+
+        <section class="cartao">
+            <h2>Fila de Espera Compatível com o Guichê {{ numeroDoGuicheSelecionado }}</h2>
+            <div class="painel-fila-guiche">
+                <div class="caixa-metrica">
+                    <span>TOTAL AGUARDANDO</span>
+                    <strong>{{ dadosDaFila.quantidadeDeSenhasAguardandoCompativeis }}</strong>
+                </div>
+                <div class="caixa-metrica">
+                    <span>FILA PRIORITÁRIA</span>
+                    <strong style="color: var(--cor-secundaria);">{{ dadosDaFila.quantidadeDeSenhasPrioritariasAguardando }}</strong>
+                </div>
+                <div class="caixa-metrica">
+                    <span>FILA CONVENCIONAL</span>
+                    <strong>{{ dadosDaFila.quantidadeDeSenhasNormaisAguardando }}</strong>
+                </div>
+            </div>
+
+            <div v-if="possuiAtendimentoEmAndamento" class="atendimento-atual">
+                <div style="font-weight: 700; color: var(--cor-primaria); font-size: 1.1rem; margin-bottom: 0.5rem;">
+                    Senha Atual: {{ dadosDaFila.senhaAtualDoGuiche.numeroFormatado }}
+                    <span :class="['etiqueta-prioridade', dadosDaFila.senhaAtualDoGuiche.prioritario ? 'etiqueta-prioritaria' : 'etiqueta-normal']" style="margin-left: 0.5rem;">
+                        {{ dadosDaFila.senhaAtualDoGuiche.prioritario ? 'PRIORITÁRIA' : 'NORMAL' }}
+                    </span>
+                </div>
+                <div><strong>Serviço:</strong> {{ dadosDaFila.senhaAtualDoGuiche.nomeTipoAtendimento }}</div>
+                <div><strong>Status:</strong> {{ dadosDaFila.senhaAtualDoGuiche.status }}</div>
+                <div><strong>Horário da Chamada:</strong> {{ dadosDaFila.senhaAtualDoGuiche.instanteChamada }}</div>
+                <div v-if="dadosDaFila.senhaAtualDoGuiche.instanteInicioAtendimento">
+                    <strong>Início do Atendimento:</strong> {{ dadosDaFila.senhaAtualDoGuiche.instanteInicioAtendimento }}
+                </div>
+            </div>
+
+            <div v-else style="padding: 1rem 0; color: var(--cor-texto-suave); font-style: italic;">
+                Nenhum atendimento em andamento neste guichê. Clique no botão abaixo para chamar a próxima senha.
+            </div>
+
+            <div class="acoes-atendente">
+                <button v-if="!possuiAtendimentoEmAndamento"
+                        type="button"
+                        @click="chamarProximaSenha"
+                        class="botao botao-primario"
+                        :disabled="carregando || dadosDaFila.quantidadeDeSenhasAguardandoCompativeis === 0">
+                    Chamar Próxima Senha
+                </button>
+
+                <template v-if="possuiAtendimentoEmAndamento && statusSenhaAtual === 'CHAMADA'">
+                    <button type="button" @click="iniciarAtendimento" class="botao botao-sucesso" :disabled="carregando">
+                        Iniciar Atendimento
+                    </button>
+                    <button type="button" @click="marcarComoAusente" class="botao botao-perigo" :disabled="carregando">
+                        Usuário Ausente (Não Compareceu)
+                    </button>
+                </template>
+
+                <button v-if="possuiAtendimentoEmAndamento && (statusSenhaAtual === 'EM_ATENDIMENTO' || statusSenhaAtual === 'EM ATENDIMENTO')"
+                        type="button"
+                        @click="finalizarAtendimento"
+                        class="botao botao-sucesso"
+                        :disabled="carregando">
+                    Finalizar Atendimento
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="rodape-principal">
+        Poupatempo - Módulo do Atendente
+    </footer>
+
+    <script src="js/atendenteApp.js"></script>
+</body>
+</html>

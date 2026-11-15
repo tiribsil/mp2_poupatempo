@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Público de Chamadas - Poupatempo</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+</head>
+<body style="background-color: #0c1a2c;">
+
+    <header class="cabecalho-principal" style="background: #081321; border-bottom: 4px solid var(--cor-secundaria);">
+        <div>
+            <h1>POUPATEMPO</h1>
+            <div class="cabecalho-subtitulo">Painel de Chamada Pública de Senhas</div>
+        </div>
+        <div style="font-size: 0.9rem; color: #a4b0be;">
+            Atualização Automática Assíncrona Ativa
+        </div>
+    </header>
+
+    <main class="conteudo-principal" id="aplicativo-painel" style="max-width: 1200px;">
+        <section class="painel-chamada-atual">
+            <div class="titulo-chamada">ÚLTIMA SENHA CHAMADA</div>
+
+            <div v-if="dadosDoPainel.ultimaSenhaChamada">
+                <div class="senha-grande">
+                    {{ dadosDoPainel.ultimaSenhaChamada.numeroFormatado }}
+                </div>
+
+                <div class="guiche-grande">
+                    GUICHÊ {{ dadosDoPainel.ultimaSenhaChamada.numeroGuiche }}
+                </div>
+
+                <div style="margin-top: 1rem; font-size: 1.3rem; opacity: 0.9;">
+                    {{ dadosDoPainel.ultimaSenhaChamada.nomeTipoAtendimento }}
+                    <span :class="['etiqueta-prioridade', dadosDoPainel.ultimaSenhaChamada.prioritario ? 'etiqueta-prioritaria' : 'etiqueta-normal']" style="margin-left: 0.5rem;">
+                        {{ dadosDoPainel.ultimaSenhaChamada.prioritario ? 'PRIORITÁRIA' : 'CONVENCIONAL' }}
+                    </span>
+                </div>
+            </div>
+
+            <div v-else style="padding: 2rem 0; font-size: 1.8rem; color: #dfe4ea;">
+                Aguardando chamadas de atendimento...
+            </div>
+        </section>
+
+        <section class="cartao">
+            <h2>Últimas Senhas Chamadas</h2>
+
+            <table class="tabela-historico" v-if="dadosDoPainel.ultimasSenhasChamadas && dadosDoPainel.ultimasSenhasChamadas.length > 0">
+                <thead>
+                    <tr>
+                        <th>Senha</th>
+                        <th>Tipo de Atendimento</th>
+                        <th>Prioridade</th>
+                        <th>Guichê</th>
+                        <th>Horário da Chamada</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="senha in dadosDoPainel.ultimasSenhasChamadas" :key="senha.identificador">
+                        <td><strong style="color: var(--cor-primaria); font-size: 1.1rem;">{{ senha.numeroFormatado }}</strong></td>
+                        <td>{{ senha.nomeTipoAtendimento }}</td>
+                        <td>
+                            <span :class="['etiqueta-prioridade', senha.prioritario ? 'etiqueta-prioritaria' : 'etiqueta-normal']">
+                                {{ senha.prioritario ? 'PRIORITÁRIA' : 'CONVENCIONAL' }}
+                            </span>
+                        </td>
+                        <td><strong>Guichê {{ senha.numeroGuiche }}</strong></td>
+                        <td>{{ senha.instanteChamada }}</td>
+                        <td>{{ senha.status }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div v-else style="padding: 1.5rem; text-align: center; color: var(--cor-texto-suave);">
+                Nenhuma chamada registrada até o momento.
+            </div>
+        </section>
+    </main>
+
+    <footer class="rodape-principal" style="background: #081321; color: #a4b0be; border-top: 1px solid #1e272e;">
+        Poupatempo - Painel Público de Atendimento
+    </footer>
+
+    <script src="js/painelApp.js"></script>
+</body>
+</html>
