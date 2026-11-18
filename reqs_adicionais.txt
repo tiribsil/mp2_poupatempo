@@ -1,0 +1,7 @@
+- Mesmo guiche não pode solicitar uma nova senha se já tem uma senha chamada ou em andamento alocada ao guiche
+- Senha padronizada pra facilitar identificação para todos
+- Competências de cada guichê configuráveis no BD
+- deixar tela do totem touch friendly
+- tela com documentos necessários para o serviço antes de receber senha
+- chamar senha de novo
+- som (painel)
