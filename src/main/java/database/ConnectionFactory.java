@@ -8,8 +8,27 @@ import java.sql.Statement;
 
 public class ConnectionFactory {
 
-    private static final String CAMINHO_DO_BANCO = System.getProperty("user.home") + File.separator + "poupatempo.db";
+    private static final String CAMINHO_DO_BANCO = resolverCaminhoDoBanco();
     private static final String URL_CONEXAO = "jdbc:sqlite:" + CAMINHO_DO_BANCO;
+
+    private static String resolverCaminhoDoBanco() {
+        String diretorioConfigurado = System.getProperty("poupatempo.banco.dir");
+        if (diretorioConfigurado == null || diretorioConfigurado.isBlank()) {
+            diretorioConfigurado = System.getenv("POUPATEMPO_BANCO_DIR");
+        }
+        if (diretorioConfigurado == null || diretorioConfigurado.isBlank()) {
+            diretorioConfigurado = System.getenv("GITHUB_WORKSPACE");
+        }
+        if (diretorioConfigurado != null && !diretorioConfigurado.isBlank()) {
+            File pasta = new File(diretorioConfigurado);
+            if (pasta.exists() && pasta.isDirectory()) {
+                return new File(pasta, "poupatempo.db").getAbsolutePath();
+            }
+        }
+        // Caso esteja rodando diretamente da raiz do projeto
+        File arquivoNaPastaAtual = new File("poupatempo.db");
+        return arquivoNaPastaAtual.getAbsolutePath();
+    }
 
     // Executa no começo
     static {
