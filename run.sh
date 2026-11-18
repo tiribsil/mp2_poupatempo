@@ -23,4 +23,7 @@ echo "=========================="
 echo " Iniciando Tomcat"
 echo "=========================="
 
+export POUPATEMPO_BANCO_DIR="$(pwd)"
+export CATALINA_OPTS="-Dpoupatempo.banco.dir=$(pwd)"
+
 "$HOME/tomcat/bin/catalina.sh" run
