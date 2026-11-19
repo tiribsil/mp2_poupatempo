@@ -353,3 +353,16 @@ body {
     border-top: 1px solid var(--cor-borda);
     background-color: #ffffff;
 }
+
+@keyframes piscarEfeito {
+    0%, 100% {
+        background-color: transparent;
+    }
+    25%, 75% {
+        background-color: #ffeb3b;
+    }
+}
+
+.piscar {
+    animation: piscarEfeito 1.5s ease-in-out;
+}

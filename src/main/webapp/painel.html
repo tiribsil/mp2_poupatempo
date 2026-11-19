@@ -19,7 +19,7 @@
         <section class="painel-chamada-atual">
             <div class="titulo-chamada">ÚLTIMA SENHA CHAMADA</div>
 
-            <div v-if="dadosDoPainel.ultimaSenhaChamada">
+            <div v-if="dadosDoPainel.ultimaSenhaChamada" :class="{ 'piscar': telaPiscando }">
                 <div class="senha-grande">
                     {{ dadosDoPainel.ultimaSenhaChamada.numeroFormatado }}
                 </div>
