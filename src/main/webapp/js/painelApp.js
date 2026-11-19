@@ -31,8 +31,11 @@ createApp({
                 }
                 const dados = await resposta.json();
 
-                const houveMudanca = this.dadosDoPainel.ultimaSenhaChamada !== null && dados.ultimaSenhaChamada !== null &&
-                this.dadosDoPainel.ultimaSenhaChamada !== dados.ultimaSenhaChamada;
+                const anterior = this.dadosDoPainel.ultimaSenhaChamada;
+                const novo = dados.ultimaSenhaChamada;
+
+                const houveMudanca = anterior !== null && novo !== null && 
+                                     anterior.numeroFormatado !== novo.numeroFormatado;
 
                 this.dadosDoPainel = dados;
                 this.conectado = true;
