@@ -16,10 +16,10 @@
     </header>
 
     <main class="conteudo-principal" id="aplicativo-painel" style="max-width: 1200px;">
-        <section class="painel-chamada-atual">
+        <section class="painel-chamada-atual" :class="{ 'piscar': telaPiscando }>
             <div class="titulo-chamada">ÚLTIMA SENHA CHAMADA</div>
 
-            <div v-if="dadosDoPainel.ultimaSenhaChamada" :class="{ 'piscar': telaPiscando }">
+            <div v-if="dadosDoPainel.ultimaSenhaChamada"">
                 <div class="senha-grande">
                     {{ dadosDoPainel.ultimaSenhaChamada.numeroFormatado }}
                 </div>

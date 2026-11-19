@@ -10,7 +10,7 @@ createApp({
             temporizadorDeConsulta: null,
             conectado: true,
             telaPiscando: false,
-            somDeChamada: new Audio("som.mp3")
+            somDeChamada: new Audio("assets/som.mp3")
         };
     },
     mounted() {
