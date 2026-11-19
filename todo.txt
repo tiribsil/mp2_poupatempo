@@ -18,3 +18,4 @@ painel de senha
 - tirar prioridade
 - tirar status
 - som
+- talvez determinar que toda senha que chega deve ser exibida por ao menos por 5 segundos, então se chegar uma nova não dá pra atropelar a atual e ela não aparecer direito
