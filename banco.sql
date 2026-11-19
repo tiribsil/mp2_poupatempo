@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS senha (
 );
 
 -- Carga inicial de tipos de atendimento (mínimo de 3 tipos)
-INSERT OR IGNORE INTO tipo_atendimento (id, nome, sigla) VALUES (1, 'RG - Carteira de Identidade', 'RG');
+INSERT OR IGNORE INTO tipo_atendimento (id, nome, sigla) VALUES (1, 'CIN - Carteira de Identidade', 'CIN');
 INSERT OR IGNORE INTO tipo_atendimento (id, nome, sigla) VALUES (2, 'CNH - Carteira de Motorista', 'CNH');
 INSERT OR IGNORE INTO tipo_atendimento (id, nome, sigla) VALUES (3, 'Veículos - Licenciamento', 'VEI');
 
@@ -45,11 +45,11 @@ INSERT OR IGNORE INTO guiche (id, numero) VALUES (2, 2);
 INSERT OR IGNORE INTO guiche (id, numero) VALUES (3, 3);
 
 -- Configuração de tipos de atendimento por guichê
--- Guichê 1 atende RG e CNH
+-- Guichê 1 atende CIN e CNH
 INSERT OR IGNORE INTO guiche_tipo_atendimento (guiche_id, tipo_atendimento_id) VALUES (1, 1);
 INSERT OR IGNORE INTO guiche_tipo_atendimento (guiche_id, tipo_atendimento_id) VALUES (1, 2);
 
--- Guichê 2 atende Todos (RG, CNH e Veículos)
+-- Guichê 2 atende Todos (CIN, CNH e Veículos)
 INSERT OR IGNORE INTO guiche_tipo_atendimento (guiche_id, tipo_atendimento_id) VALUES (2, 1);
 INSERT OR IGNORE INTO guiche_tipo_atendimento (guiche_id, tipo_atendimento_id) VALUES (2, 2);
 INSERT OR IGNORE INTO guiche_tipo_atendimento (guiche_id, tipo_atendimento_id) VALUES (2, 3);
@@ -59,7 +59,7 @@ INSERT OR IGNORE INTO guiche_tipo_atendimento (guiche_id, tipo_atendimento_id) V
 
 -- Carga inicial de senhas demonstrativas
 INSERT OR IGNORE INTO senha (id, numero_formatado, tipo_atendimento_id, prioritario, status, instante_emissao, instante_chamada, instante_inicio_atendimento, instante_fim_atendimento, guiche_id)
-VALUES (1, 'RG-001', 1, 0, 'FINALIZADA', '2026-11-15 08:30:00', '2026-11-15 08:35:00', '2026-11-15 08:36:00', '2026-11-15 08:50:00', 1);
+VALUES (1, 'CIN-001', 1, 0, 'FINALIZADA', '2026-11-15 08:30:00', '2026-11-15 08:35:00', '2026-11-15 08:36:00', '2026-11-15 08:50:00', 1);
 
 INSERT OR IGNORE INTO senha (id, numero_formatado, tipo_atendimento_id, prioritario, status, instante_emissao, instante_chamada, instante_inicio_atendimento, instante_fim_atendimento, guiche_id)
 VALUES (2, 'CNH-P001', 2, 1, 'FINALIZADA', '2026-11-15 08:40:00', '2026-11-15 08:45:00', '2026-11-15 08:46:00', '2026-11-15 09:05:00', 2);
@@ -68,7 +68,7 @@ INSERT OR IGNORE INTO senha (id, numero_formatado, tipo_atendimento_id, priorita
 VALUES (3, 'VEI-001', 3, 0, 'AGUARDANDO', '2026-11-15 09:10:00', NULL, NULL, NULL, NULL);
 
 INSERT OR IGNORE INTO senha (id, numero_formatado, tipo_atendimento_id, prioritario, status, instante_emissao, instante_chamada, instante_inicio_atendimento, instante_fim_atendimento, guiche_id)
-VALUES (4, 'RG-P002', 1, 1, 'AGUARDANDO', '2026-11-15 09:15:00', NULL, NULL, NULL, NULL);
+VALUES (4, 'CIN-P002', 1, 1, 'AGUARDANDO', '2026-11-15 09:15:00', NULL, NULL, NULL, NULL);
 
 INSERT OR IGNORE INTO senha (id, numero_formatado, tipo_atendimento_id, prioritario, status, instante_emissao, instante_chamada, instante_inicio_atendimento, instante_fim_atendimento, guiche_id)
 VALUES (5, 'CNH-002', 2, 0, 'AGUARDANDO', '2026-11-15 09:20:00', NULL, NULL, NULL, NULL);

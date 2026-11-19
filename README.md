@@ -79,12 +79,12 @@ Acesse cada interface em uma aba distinta do navegador:
 ## Regras de Negócio Implementadas
 
 1. **Tipos de Atendimento Disponíveis:**
-   - `RG`: Carteira de Identidade
+   - `CIN`: Carteira de Identidade
    - `CNH`: Carteira Nacional de Habilitação
    - `VEI`: Veículos (Licenciamento e Registro)
 2. **Configuração de Guichês no Banco de Dados:**
-   - **Guichê 1:** Atende RG e CNH.
-   - **Guichê 2:** Atende Todos (RG, CNH e Veículos).
+   - **Guichê 1:** Atende CIN e CNH.
+   - **Guichê 2:** Atende Todos (CIN, CNH e Veículos).
    - **Guichê 3:** Atende apenas Veículos.
 3. **Regra de Alternância de Prioridades (Requisito 7):**
    - Senhas prioritárias possuem preferência natural.

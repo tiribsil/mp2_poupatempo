@@ -91,7 +91,7 @@ public class ConnectionFactory {
             // Carga inicial se estiver vazio
             var resultadoContagem = comando.executeQuery("SELECT COUNT(*) FROM tipo_atendimento");
             if (resultadoContagem.next() && resultadoContagem.getInt(1) == 0) {
-                comando.execute("INSERT INTO tipo_atendimento (id, nome, sigla) VALUES (1, 'RG - Carteira de Identidade', 'RG');");
+                comando.execute("INSERT INTO tipo_atendimento (id, nome, sigla) VALUES (1, 'CIN - Carteira de Identidade', 'CIN');");
                 comando.execute("INSERT INTO tipo_atendimento (id, nome, sigla) VALUES (2, 'CNH - Carteira de Motorista', 'CNH');");
                 comando.execute("INSERT INTO tipo_atendimento (id, nome, sigla) VALUES (3, 'Veículos - Licenciamento', 'VEI');");
 
@@ -110,7 +110,7 @@ public class ConnectionFactory {
 
                 comando.execute("""
                     INSERT INTO senha (id, numero_formatado, tipo_atendimento_id, prioritario, status, instante_emissao, instante_chamada, instante_inicio_atendimento, instante_fim_atendimento, guiche_id)
-                    VALUES (1, 'RG-001', 1, 0, 'FINALIZADA', '2026-11-15 08:30:00', '2026-11-15 08:35:00', '2026-11-15 08:36:00', '2026-11-15 08:50:00', 1);
+                    VALUES (1, 'CIN-001', 1, 0, 'FINALIZADA', '2026-11-15 08:30:00', '2026-11-15 08:35:00', '2026-11-15 08:36:00', '2026-11-15 08:50:00', 1);
                 """);
                 comando.execute("""
                     INSERT INTO senha (id, numero_formatado, tipo_atendimento_id, prioritario, status, instante_emissao, instante_chamada, instante_inicio_atendimento, instante_fim_atendimento, guiche_id)
@@ -122,7 +122,7 @@ public class ConnectionFactory {
                 """);
                 comando.execute("""
                     INSERT INTO senha (id, numero_formatado, tipo_atendimento_id, prioritario, status, instante_emissao, instante_chamada, instante_inicio_atendimento, instante_fim_atendimento, guiche_id)
-                    VALUES (4, 'RG-P002', 1, 1, 'AGUARDANDO', '2026-11-15 09:15:00', NULL, NULL, NULL, NULL);
+                    VALUES (4, 'CIN-P002', 1, 1, 'AGUARDANDO', '2026-11-15 09:15:00', NULL, NULL, NULL, NULL);
                 """);
                 comando.execute("""
                     INSERT INTO senha (id, numero_formatado, tipo_atendimento_id, prioritario, status, instante_emissao, instante_chamada, instante_inicio_atendimento, instante_fim_atendimento, guiche_id)

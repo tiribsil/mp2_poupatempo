@@ -1,6 +1,6 @@
 Tela emissão senha
 [ ] deixar tela do totem touch friendly
-[ ] RG -> CIN
+[x] RG -> CIN
 [ ] tela com documentos necessários para o serviço antes de receber senha
 [ ] deixar senha parecida com o que seria de fato impresso
 [ ] obter proximo numero considera prioridade tb
