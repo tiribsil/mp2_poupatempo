@@ -5,10 +5,10 @@ Tela emissão senha
 - deixar senha parecida com o que seria de fato impresso
 
 tela do atendente
-- add espaço depois dos dois pontos
-- mudar "posto" pra "guiche"
-- fila de espera (compatível -> do) guiche
-- ordem das filas -> prioritário, convencional depois total
+- add espaço depois dos dois pontos - feito
+- mudar "posto" pra "guiche" - feito
+- fila de espera (compatível -> do) guiche - feito
+- ordem das filas -> prioritário, convencional depois total - feito
 - chamar senha de novo
 
 painel de senha
