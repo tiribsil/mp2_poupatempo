@@ -3,7 +3,8 @@
 CREATE TABLE IF NOT EXISTS tipo_atendimento (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nome VARCHAR(100) NOT NULL,
-    sigla VARCHAR(10) NOT NULL
+    sigla VARCHAR(10) NOT NULL,
+    documentos VARCHAR(100)
 );
 
 CREATE TABLE IF NOT EXISTS guiche (
@@ -35,9 +36,9 @@ CREATE TABLE IF NOT EXISTS senha (
 );
 
 -- Carga inicial de tipos de atendimento (mínimo de 3 tipos)
-INSERT OR IGNORE INTO tipo_atendimento (id, nome, sigla) VALUES (1, 'CIN - Carteira de Identidade', 'CIN');
-INSERT OR IGNORE INTO tipo_atendimento (id, nome, sigla) VALUES (2, 'CNH - Carteira de Motorista', 'CNH');
-INSERT OR IGNORE INTO tipo_atendimento (id, nome, sigla) VALUES (3, 'Veículos - Licenciamento', 'VEI');
+INSERT OR IGNORE INTO tipo_atendimento (id, nome, sigla, documentos) VALUES (1, 'CIN - Carteira de Identidade', 'CIN', 'Certidão de Nascimento');
+INSERT OR IGNORE INTO tipo_atendimento (id, nome, sigla, documentos) VALUES (2, 'CNH - Carteira de Motorista', 'CNH', 'Documento com foto,Comprovante de Residência');
+INSERT OR IGNORE INTO tipo_atendimento (id, nome, sigla, documentos) VALUES (3, 'Veículos - Licenciamento', 'VEI', 'Documento com foto,Quitação de débitos');
 
 -- Carga inicial de guichês
 INSERT OR IGNORE INTO guiche (id, numero) VALUES (1, 1);
