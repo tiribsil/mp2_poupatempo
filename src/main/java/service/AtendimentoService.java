@@ -34,7 +34,7 @@ public class AtendimentoService {
             throw new IllegalArgumentException("Tipo de atendimento não encontrado.");
         }
 
-        int proximoNumero = this.senhaDAO.obterProximoNumeroSequencial(identificadorTipoAtendimento);
+        int proximoNumero = this.senhaDAO.obterProximoNumeroSequencial(identificadorTipoAtendimento, prioritario);
         String prefixoPrioridade = prioritario ? "P" : "";
         String numeroFormatado = String.format("%s-%s%03d", tipo.getSigla(), prefixoPrioridade, proximoNumero);
         String instanteAtual = LocalDateTime.now().format(this.formatadorDeDataHora);

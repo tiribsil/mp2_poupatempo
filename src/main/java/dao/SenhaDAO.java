@@ -12,6 +12,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SenhaDAO {
 
@@ -46,17 +48,30 @@ public class SenhaDAO {
         }
     }
 
-    public int obterProximoNumeroSequencial(Integer identificadorTipoAtendimento) {
-        String comandoSql = "SELECT COUNT(*) FROM senha WHERE tipo_atendimento_id = ?";
+    public int obterProximoNumeroSequencial(Integer identificadorTipoAtendimento, boolean prioritario) {
+        String comandoSql = """
+            SELECT numero_formatado 
+            FROM senha 
+            WHERE tipo_atendimento_id = ? 
+            AND prioritario = ? 
+            ORDER BY id DESC 
+            LIMIT 1
+        """;
 
         try (Connection conexao = ConnectionFactory.getConnection();
              PreparedStatement comandoPreparado = conexao.prepareStatement(comandoSql)) {
 
             comandoPreparado.setInt(1, identificadorTipoAtendimento);
+            comandoPreparado.setInt(2, prioritario ? 1 : 0);
 
             try (ResultSet resultado = comandoPreparado.executeQuery()) {
                 if (resultado.next()) {
-                    return resultado.getInt(1) + 1;
+                    String ultimoNumeroFormatado = resultado.getString("numero_formatado");
+                    Matcher matcher = Pattern.compile("(\\d+)$").matcher(ultimoNumeroFormatado);
+                    if (matcher.find()) {
+                        int ultimoNumero = Integer.parseInt(matcher.group(1));
+                        return ultimoNumero + 1;
+                    }
                 }
             }
             return 1;
