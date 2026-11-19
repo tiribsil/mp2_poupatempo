@@ -97,6 +97,9 @@
                     <button type="button" @click="marcarComoAusente" class="botao botao-perigo" :disabled="carregando">
                         Usuário Ausente (Não Compareceu)
                     </button>
+                    <button type="button" @click="chamarSenhaNovamente" class="botao botao-perigo" :disabled="carregando">
+                        Chamar Senha Novamente
+                    </button>
                 </template>
 
                 <button v-if="possuiAtendimentoEmAndamento && (statusSenhaAtual === 'EM_ATENDIMENTO' || statusSenhaAtual === 'EM ATENDIMENTO')"

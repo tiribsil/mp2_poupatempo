@@ -212,6 +212,29 @@ public class SenhaDAO {
         }
     }
 
+    public void atualizarHorarioChamadaNovamente(Integer identificadorSenha, String instanteChamada) {
+        String comandoSql = """
+            UPDATE senha
+            SET instante_chamada = ?
+            WHERE id = ? AND status = 'CHAMADA'
+        """;
+
+        try (Connection conexao = ConnectionFactory.getConnection();
+             PreparedStatement comandoPreparado = conexao.prepareStatement(comandoSql)) {
+
+            comandoPreparado.setString(1, instanteChamada);
+            comandoPreparado.setInt(2, identificadorSenha);
+
+            int linhasAfetadas = comandoPreparado.executeUpdate();
+            if (linhasAfetadas == 0) {
+                throw new IllegalStateException("A senha já iniciou o atendimento ou não está mais disponível.");
+            }
+
+        } catch (SQLException excecao) {
+            throw new RuntimeException("Erro ao atualizar horário de uma senha chamada novamente", excecao);
+        }
+    }
+
     public void atualizarParaInicioAtendimento(Integer identificadorSenha, String instanteInicio) {
         String comandoSql = """
             UPDATE senha

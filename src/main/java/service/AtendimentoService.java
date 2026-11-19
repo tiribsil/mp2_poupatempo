@@ -132,6 +132,30 @@ public class AtendimentoService {
         return proximaSenha;
     }
 
+    public synchronized Senha chamarSenhaNovamente(Integer numeroDoGuiche) {
+        Guiche guiche = this.guicheDAO.buscarPorNumero(numeroDoGuiche);
+        if (guiche == null) {
+            throw new IllegalArgumentException("Guichê não encontrado.");
+        }
+
+        Senha senhaAtual = this.senhaDAO.buscarSenhaAtualDoGuiche(guiche.getIdentificador());
+        if (senhaAtual == null) {
+            throw new IllegalStateException("O guichê não possui uma senha em estado chamada no momento. Chame uma nova senha");
+        }
+
+        List<Integer> identificadoresTipos = extrairIdentificadoresDeTipos(guiche);
+        if (identificadoresTipos.isEmpty()) {
+            throw new IllegalStateException("O guichê não possui tipos de atendimento configurados.");
+        }
+
+        String instanteChamada = LocalDateTime.now().format(this.formatadorDeDataHora);
+        this.senhaDAO.atualizarHorarioChamadaNovamente(senhaAtual.getIdentificador(), instanteChamada);
+
+        senhaAtual.setInstanteChamada(instanteChamada);
+
+        return senhaAtual;
+    }
+
     public void iniciarAtendimento(Integer identificadorSenha) {
         String instanteInicio = LocalDateTime.now().format(this.formatadorDeDataHora);
         this.senhaDAO.atualizarParaInicioAtendimento(identificadorSenha, instanteInicio);

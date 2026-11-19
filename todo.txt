@@ -10,7 +10,7 @@ tela do atendente
 [x] mudar "posto" pra "guiche" - feito
 [x] fila de espera (compatível -> do) guiche - feito
 [x] ordem das filas -> prioritário, convencional depois total - feito
-[ ] chamar senha de novo
+[x] chamar senha de novo
 
 painel de senha
 [ ] diminuir faixa de cima

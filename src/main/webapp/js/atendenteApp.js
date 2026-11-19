@@ -116,6 +116,42 @@ createApp({
             }
         },
 
+        async chamarSenhaNovamente(){
+            this.mensagemDeErro = "";
+            this.mensagemDeSucesso = "";
+            this.carregando = true;
+
+            try {
+                const parametros = new URLSearchParams();
+                parametros.append("acao", "novamente");
+                parametros.append("numeroGuiche", this.numeroDoGuicheSelecionado);
+
+                const resposta = await fetch("api/atendente", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: parametros.toString()
+                });
+
+                const dados = await resposta.json();
+
+                if (!resposta.ok) {
+                    throw new Error(dados.mensagem || "Erro ao chamar senha novamente.");
+                }
+
+                if (dados.mensagem && !dados.numeroFormatado) {
+                    this.mensagemDeSucesso = dados.mensagem;
+                } else {
+                    this.mensagemDeSucesso = `Senha ${dados.numeroFormatado} chamada para o Guichê ${this.numeroDoGuicheSelecionado}!`;
+                }
+
+                await this.atualizarFila();
+            } catch (erro) {
+                this.mensagemDeErro = erro.message;
+            } finally {
+                this.carregando = false;
+            }
+        },
+
         async iniciarAtendimento() {
             if (!this.dadosDaFila.senhaAtualDoGuiche) return;
 
