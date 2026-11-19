@@ -12,13 +12,13 @@
     <header class="cabecalho-principal">
         <div>
             <h1>POUPATEMPO</h1>
-            <div class="cabecalho-subtitulo">Terminal de Atendimento ao Cidadão</div>
+            <div class="cabecalho-subtitulo">Sistema de Atendimento</div>
         </div>
     </header>
 
     <main class="conteudo-principal" id="aplicativo-atendente">
         <section class="cartao">
-            <h2>Configuração do Posto de Atendimento</h2>
+            <h2>Configuração do Guichê de Atendimento</h2>
             
             <div class="grupo-formulario" style="max-width: 400px;">
                 <label for="seletor-guiche">Selecione seu Guichê de Trabalho:</label>
@@ -30,7 +30,7 @@
             </div>
 
             <div v-if="guicheSelecionado" style="font-size: 0.95rem; color: var(--cor-texto-suave);">
-                <strong>Serviços atendidos por este guichê:</strong>
+                <strong>Serviços atendidos por este guichê: </strong>
                 <span v-for="(tipo, idx) in guicheSelecionado.tiposDeAtendimentoAtendidos" :key="tipo.identificador">
                     {{ tipo.nome }}<span v-if="idx < guicheSelecionado.tiposDeAtendimentoAtendidos.length - 1">, </span>
                 </span>
@@ -46,12 +46,8 @@
         </div>
 
         <section class="cartao">
-            <h2>Fila de Espera Compatível com o Guichê {{ numeroDoGuicheSelecionado }}</h2>
+            <h2>Fila de Espera do Guichê {{ numeroDoGuicheSelecionado }}</h2>
             <div class="painel-fila-guiche">
-                <div class="caixa-metrica">
-                    <span>TOTAL AGUARDANDO</span>
-                    <strong>{{ dadosDaFila.quantidadeDeSenhasAguardandoCompativeis }}</strong>
-                </div>
                 <div class="caixa-metrica">
                     <span>FILA PRIORITÁRIA</span>
                     <strong style="color: var(--cor-secundaria);">{{ dadosDaFila.quantidadeDeSenhasPrioritariasAguardando }}</strong>
@@ -59,6 +55,10 @@
                 <div class="caixa-metrica">
                     <span>FILA CONVENCIONAL</span>
                     <strong>{{ dadosDaFila.quantidadeDeSenhasNormaisAguardando }}</strong>
+                </div>
+                <div class="caixa-metrica">
+                    <span>TOTAL AGUARDANDO</span>
+                    <strong>{{ dadosDaFila.quantidadeDeSenhasAguardandoCompativeis }}</strong>
                 </div>
             </div>
 
