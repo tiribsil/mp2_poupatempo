@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="css/style.css">
     <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 </head>
-<body style="background-color: #0c1a2c;">
+<body class="pagina-painel">
 
     <header class="cabecalho-principal" style="background: #081321; border-bottom: 4px solid var(--cor-secundaria);">
         <div>
@@ -15,7 +15,7 @@
         </div>
     </header>
 
-    <main class="conteudo-principal" id="aplicativo-painel" style="max-width: 1200px;">
+    <main class="conteudo-painel" id="aplicativo-painel">
         <section class="painel-chamada-atual" :class="{ 'piscar': telaPiscando }">
             <div class="titulo-chamada">ÚLTIMA SENHA CHAMADA</div>
 
@@ -27,7 +27,6 @@
                 <div class="guiche-grande">
                     GUICHÊ {{ dadosDoPainel.ultimaSenhaChamada.numeroGuiche }}
                 </div>
-
             </div>
 
             <div v-else style="padding: 2rem 0; font-size: 1.8rem; color: #dfe4ea;">
@@ -35,45 +34,32 @@
             </div>
         </section>
 
-        <section class="cartao">
+        <section class="cartao painel-historico">
             <h2>Últimas Senhas Chamadas</h2>
 
-            <table class="tabela-historico" v-if="dadosDoPainel.ultimasSenhasChamadas && dadosDoPainel.ultimasSenhasChamadas.length > 0">
-                <thead>
-                    <tr>
-                        <th>Senha</th>
-                        <th>Tipo de Atendimento</th>
-                        <th>Prioridade</th>
-                        <th>Guichê</th>
-                        <th>Horário da Chamada</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="senha in dadosDoPainel.ultimasSenhasChamadas" :key="senha.identificador">
-                        <td><strong style="color: var(--cor-primaria); font-size: 1.1rem;">{{ senha.numeroFormatado }}</strong></td>
-                        <td>{{ senha.nomeTipoAtendimento }}</td>
-                        <td>
-                            <span :class="['etiqueta-prioridade', senha.prioritario ? 'etiqueta-prioritaria' : 'etiqueta-normal']">
-                                {{ senha.prioritario ? 'PRIORITÁRIA' : 'CONVENCIONAL' }}
-                            </span>
-                        </td>
-                        <td><strong>Guichê {{ senha.numeroGuiche }}</strong></td>
-                        <td>{{ senha.instanteChamada }}</td>
-                        <td>{{ senha.status }}</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="lista-historico-cards" v-if="dadosDoPainel.ultimasSenhasChamadas && dadosDoPainel.ultimasSenhasChamadas.length > 0">
+                <div
+                    class="card-historico"
+                    v-for="senha in dadosDoPainel.ultimasSenhasChamadas"
+                    :key="senha.identificador"
+                    :class="'status-' + (senha.status || '').toLowerCase().trim().replace(/[\s_]+/g, '-')"
+                >
+                    <div class="card-historico-topo">
+                        <span class="card-historico-senha">{{ senha.numeroFormatado }}</span>
+                        <span class="card-historico-guiche">Guichê {{ senha.numeroGuiche }}</span>
+                    </div>
+                    <div class="card-historico-rodape">
+                        <span>{{ senha.status }}</span>
+                        <span>{{ senha.instanteChamada?.split(' ')[1]?.slice(0, 5) }}</span>
+                    </div>
+                </div>
+            </div>
 
             <div v-else style="padding: 1.5rem; text-align: center; color: var(--cor-texto-suave);">
                 Nenhuma chamada registrada até o momento.
             </div>
         </section>
     </main>
-
-    <footer class="rodape-principal" style="background: #081321; color: #a4b0be; border-top: 1px solid #1e272e;">
-        Poupatempo - Painel Público de Atendimento
-    </footer>
 
     <script src="js/painelApp.js"></script>
 </body>
