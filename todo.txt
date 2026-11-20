@@ -13,10 +13,11 @@ tela do atendente
 [x] chamar senha de novo
 
 painel de senha
-[ ] diminuir faixa de cima
+[x] diminuir faixa de cima
 [ ] escalar tudo pra caber na tela (textos, caixas)
-[ ] tirar tipo de serviço da tela
-[ ] tirar prioridade
-[ ] tirar status
+[x] tirar tipo de serviço da tela
+[x] tirar prioridade
+[x] tirar status
 [x] som
+[x] determinar numero máx de últimas senhas exibidas no painel
 [ ] talvez determinar que toda senha que chega deve ser exibida por ao menos por 5 segundos, então se chegar uma nova não dá pra atropelar a atual e ela não aparecer direito

@@ -28,12 +28,6 @@
                     GUICHÊ {{ dadosDoPainel.ultimaSenhaChamada.numeroGuiche }}
                 </div>
 
-                <div style="margin-top: 1rem; font-size: 1.3rem; opacity: 0.9;">
-                    {{ dadosDoPainel.ultimaSenhaChamada.nomeTipoAtendimento }}
-                    <span :class="['etiqueta-prioridade', dadosDoPainel.ultimaSenhaChamada.prioritario ? 'etiqueta-prioritaria' : 'etiqueta-normal']" style="margin-left: 0.5rem;">
-                        {{ dadosDoPainel.ultimaSenhaChamada.prioritario ? 'PRIORITÁRIA' : 'CONVENCIONAL' }}
-                    </span>
-                </div>
             </div>
 
             <div v-else style="padding: 2rem 0; font-size: 1.8rem; color: #dfe4ea;">
