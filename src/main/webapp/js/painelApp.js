@@ -35,7 +35,8 @@ createApp({
                 const novo = dados.ultimaSenhaChamada;
 
                 const houveMudanca = anterior !== null && novo !== null && 
-                                     anterior.numeroFormatado !== novo.numeroFormatado;
+                                     (anterior.numeroFormatado !== novo.numeroFormatado || 
+                                      anterior.instanteChamada !== novo.instanteChamada);
 
                 this.dadosDoPainel = dados;
                 this.conectado = true;
