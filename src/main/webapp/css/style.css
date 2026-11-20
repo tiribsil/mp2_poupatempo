@@ -374,20 +374,51 @@ body {
    LAYOUT ESPECÍFICO DO PAINEL PÚBLICO
    ========================================= */
 
+html.pagina-painel,
+body.pagina-painel {
+    height: 100vh;
+    max-height: 100vh;
+    overflow: hidden !important;
+    margin: 0;
+    padding: 0;
+}
+
+html.pagina-painel {
+    /* 
+       Escala proporcional contínua à resolução da tela com base em 768p (1366x768):
+       A 768px de altura: 100vh / 48 = 16px (1rem padrão do 768p).
+       A 1080px de altura: 100vh / 48 = 22.5px (+40.6%).
+       A 1440px de altura: 100vh / 48 = 30px (+87.5%).
+       A 2160px de altura (4K): 100vh / 48 = 45px (+181%).
+       min() garante que tanto a largura quanto a altura caibam na janela sem qualquer rolagem.
+    */
+    font-size: min(calc(100vh / 48), calc(100vw / 85.375));
+}
+
 body.pagina-painel {
     background-color: #0c1a2c;
-    height: 100vh;
-    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+body.pagina-painel .cabecalho-principal {
+    padding: 0.8rem 2rem;
+    flex-shrink: 0;
+}
+
+body.pagina-painel .cabecalho-principal h1 {
+    font-size: 1.6rem;
 }
 
 .conteudo-painel {
     flex: 1;
     width: 100%;
-    padding: 1.5rem;
+    padding: 1.2rem 1.6rem;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 1.4rem;
     min-height: 0;
+    overflow: hidden;
 }
 
 .conteudo-painel .painel-chamada-atual {
@@ -397,18 +428,29 @@ body.pagina-painel {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    border-radius: 0.8rem;
+    padding: 1.5rem;
+    overflow: hidden;
 }
 
 .conteudo-painel .painel-chamada-atual .titulo-chamada {
-    font-size: clamp(1.2rem, 2vw, 2rem);
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    margin-bottom: 0.6rem;
 }
 
 .conteudo-painel .painel-chamada-atual .senha-grande {
-    font-size: clamp(4.5rem, 8vw, 9rem);
+    font-size: 6.8rem;
+    font-weight: 900;
+    line-height: 1.05;
+    margin: 0.5rem 0;
+    letter-spacing: 3px;
 }
 
 .conteudo-painel .painel-chamada-atual .guiche-grande {
-    font-size: clamp(2rem, 3.5vw, 3.8rem);
+    font-size: 3.2rem;
+    font-weight: 700;
+    color: #fbc531;
 }
 
 .painel-historico {
@@ -418,9 +460,15 @@ body.pagina-painel {
     flex-direction: column;
     min-height: 0;
     background-color: #dce7f0;
+    border-radius: 0.8rem;
+    padding: 1.2rem 1.4rem;
+    overflow: hidden;
 }
 
 .painel-historico h2 {
+    font-size: 1.4rem;
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.3rem;
     flex-shrink: 0;
     border-bottom: none;
 }
@@ -429,23 +477,24 @@ body.pagina-painel {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 0.85rem;
-    overflow-y: auto;
-    padding-right: 0.25rem;
+    gap: 0.75rem;
+    overflow: hidden;
+    padding-right: 0;
+    min-height: 0;
 }
 
 .card-historico {
-    flex: 1;
-    min-height: 82px;
-    max-height: 130px;
-    border-radius: 8px;
-    padding: 1rem 1.4rem;
+    flex: 1 1 0;
+    min-height: 0;
+    border-radius: 0.6rem;
+    padding: 0.6rem 1.2rem;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
     background-color: #f7f8ff;
     color: var(--cor-texto);
+    overflow: hidden;
 }
 
 .card-historico-topo {
@@ -456,14 +505,16 @@ body.pagina-painel {
 }
 
 .card-historico-senha {
-    font-size: clamp(2.0rem, 2.2vw, 2.2rem);
+    font-size: 2.1rem;
     font-weight: 800;
     letter-spacing: 1px;
+    line-height: 1.1;
 }
 
 .card-historico-guiche {
-    font-size: clamp(1.5rem, 1.8vw, 1.7rem);
+    font-size: 1.6rem;
     font-weight: 700;
+    line-height: 1.1;
 }
 
 .card-historico-rodape {
@@ -473,7 +524,7 @@ body.pagina-painel {
     font-size: 0.95rem;
     font-weight: 600;
     opacity: 0.9;
-    margin-top: 0.4rem;
+    margin-top: 0.3rem;
 }
 
 /* Cores dos cards por status */
@@ -495,21 +546,4 @@ body.pagina-painel {
 .card-historico.status-ausente {
     background-color: #fa8231;
     color: #ffffff;
-}
-
-/* Responsividade para telas menores */
-@media (max-width: 900px) {
-    body.pagina-painel {
-        height: auto;
-        min-height: 100vh;
-        overflow: auto;
-    }
-
-    .conteudo-painel {
-        grid-template-columns: 1fr;
-    }
-
-    .conteudo-painel .painel-chamada-atual {
-        min-height: 320px;
-    }
 }

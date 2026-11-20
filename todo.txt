@@ -14,7 +14,7 @@ tela do atendente
 
 painel de senha
 [x] diminuir faixa de cima
-[ ] escalar tudo pra caber na tela (textos, caixas)
+[x] escalar tudo pra caber na tela (textos, caixas)
 [x] tirar tipo de serviço da tela
 [x] tirar prioridade
 [x] tirar status
