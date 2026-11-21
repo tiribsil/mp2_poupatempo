@@ -13,7 +13,7 @@ import java.util.List;
 public class TipoAtendimentoDAO {
 
     public List<TipoAtendimento> listarTodos() {
-        String comandoSql = "SELECT id, nome, sigla FROM tipo_atendimento ORDER BY id";
+        String comandoSql = "SELECT * FROM tipo_atendimento ORDER BY id";
         List<TipoAtendimento> listaDeTipos = new ArrayList<>();
 
         try (Connection conexao = ConnectionFactory.getConnection();
@@ -24,7 +24,8 @@ public class TipoAtendimentoDAO {
                 TipoAtendimento tipo = new TipoAtendimento(
                     resultadoConsulta.getInt("id"),
                     resultadoConsulta.getString("nome"),
-                    resultadoConsulta.getString("sigla")
+                    resultadoConsulta.getString("sigla"),
+                    resultadoConsulta.getString("documentos")
                 );
                 listaDeTipos.add(tipo);
             }
@@ -37,7 +38,7 @@ public class TipoAtendimentoDAO {
     }
 
     public TipoAtendimento buscarPorIdentificador(Integer identificador) {
-        String comandoSql = "SELECT id, nome, sigla FROM tipo_atendimento WHERE id = ?";
+        String comandoSql = "SELECT * FROM tipo_atendimento WHERE id = ?";
 
         try (Connection conexao = ConnectionFactory.getConnection();
              PreparedStatement comandoPreparado = conexao.prepareStatement(comandoSql)) {
@@ -49,7 +50,8 @@ public class TipoAtendimentoDAO {
                     return new TipoAtendimento(
                         resultadoConsulta.getInt("id"),
                         resultadoConsulta.getString("nome"),
-                        resultadoConsulta.getString("sigla")
+                        resultadoConsulta.getString("sigla"),
+                        resultadoConsulta.getString("documentos")
                     );
                 }
             }

@@ -65,7 +65,7 @@ public class GuicheDAO {
 
     private List<TipoAtendimento> buscarTiposDoGuiche(Connection conexao, Integer identificadorGuiche) throws SQLException {
         String comandoSql = """
-            SELECT ta.id, ta.nome, ta.sigla
+            SELECT ta.id, ta.nome, ta.sigla, ta.documentos
             FROM tipo_atendimento ta
             INNER JOIN guiche_tipo_atendimento gta ON gta.tipo_atendimento_id = ta.id
             WHERE gta.guiche_id = ?
@@ -80,7 +80,8 @@ public class GuicheDAO {
                     tipos.add(new TipoAtendimento(
                         resultado.getInt("id"),
                         resultado.getString("nome"),
-                        resultado.getString("sigla")
+                        resultado.getString("sigla"),
+                        resultado.getString("documentos")
                     ));
                 }
             }

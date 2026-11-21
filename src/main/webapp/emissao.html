@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="pagina-totem">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Totem de Emissão de Senhas - Poupatempo</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 </head>
-<body>
+<body class="pagina-totem">
 
     <header class="cabecalho-principal">
         <div>
@@ -16,71 +16,207 @@
         </div>
     </header>
 
-    <main class="conteudo-principal" id="aplicativo-emissao"> <!-- Tag do vue -->
-        <section class="cartao" style="max-width: 600px; margin: 0 auto;">
-            <h2>Retirar Senha de Atendimento</h2>
+    <main class="conteudo-totem" id="aplicativo-emissao">
+        
+        <!-- Mensagem de erro em destaque -->
+        <div v-if="mensagemDeErro" class="mensagem-alerta alerta-erro totem-alerta">
+            {{ mensagemDeErro }}
+        </div>
 
-            <div v-if="mensagemDeErro" class="mensagem-alerta alerta-erro">
-                {{ mensagemDeErro }}
+        <!-- =======================================================
+             ETAPA 1: SELEÇÃO DO TIPO DE ATENDIMENTO (BOTÕES GRANDES)
+             ======================================================= -->
+        <section v-if="etapaAtual === 'selecao-tipo'" class="totem-etapa">
+            <div class="totem-cabecalho-etapa">
+                <div class="totem-topo-etapa">
+                    <span class="totem-passo">Passo 1 de 3</span>
+                </div>
+                <h2>Selecione o Serviço Desejado</h2>
             </div>
 
-            <div v-if="mensagemDeSucesso" class="mensagem-alerta alerta-sucesso">
-                {{ mensagemDeSucesso }}
-            </div>
-
-            <form v-if="!senhaEmitida" @submit.prevent="emitirSenha">
-                <div class="grupo-formulario">
-                    <label for="campo-tipo">Selecione o Serviço Desejado:</label>
-                    <select id="campo-tipo" v-model="identificadorTipoSelecionado" class="campo-selecao" required>
-                        <option value="" disabled>Escolha um tipo de atendimento...</option>
-                        <option v-for="tipo in listaDeTiposDeAtendimento" :key="tipo.identificador" :value="tipo.identificador">
-                            {{ tipo.nome }}
-                        </option>
-                    </select>
-                </div>
-
-                <div class="grupo-formulario" style="margin: 1.5rem 0;">
-                    <label class="opcao-checkbox">
-                        <input type="checkbox" v-model="atendimentoPrioritario">
-                        <span>Possui direito a atendimento prioritário? (Lei Federal 10.048/00)</span>
-                    </label>
-                </div>
-
-                <button type="submit" class="botao botao-primario" style="width: 100%;" :disabled="carregando">
-                    {{ carregando ? 'Gerando Senha...' : 'Emitir Senha' }}
+            <div class="grade-botoes-totem">
+                <button
+                    v-for="tipo in listaDeTiposDeAtendimento"
+                    :key="tipo.identificador"
+                    type="button"
+                    class="botao-totem-servico"
+                    @click="selecionarTipo(tipo)"
+                >
+                    <span class="botao-totem-titulo">{{ tipo.nome }}</span>
+                    <span class="botao-totem-acao">Toque para selecionar →</span>
                 </button>
-            </form>
+            </div>
+        </section>
 
-            <div v-else class="recibo-senha">
+        <!-- =======================================================
+             ETAPA 2: CONFERÊNCIA DE DOCUMENTOS NECESSÁRIOS
+             ======================================================= -->
+        <section v-else-if="etapaAtual === 'documentos'" class="totem-etapa">
+            <div class="totem-cabecalho-etapa">
+                <div class="totem-topo-etapa">
+                    <button type="button" class="botao-totem-voltar totem-voltar-topo" @click="voltarEtapa">
+                        ← Voltar
+                    </button>
+                    <span class="totem-passo">Passo 2 de 3</span>
+                </div>
+                <h2 class="totem-titulo-unificado">
+                    Para realizar o serviço de <span class="totem-servico-destaque">{{ tipoSelecionado?.nome }}</span>,<br>
+                    você precisa dos seguintes documentos:
+                </h2>
+            </div>
+
+            <div class="caixa-documentos">
+                <ul v-if="documentosFormatados.length > 0" class="lista-documentos">
+                    <li v-for="(doc, index) in documentosFormatados" :key="index">
+                        ✔ {{ doc }}
+                    </li>
+                </ul>
+                <p v-else class="sem-doc-aviso">
+                    Nenhum documento específico informado para este serviço.
+                </p>
+            </div>
+
+            <div class="totem-pergunta-acoes">
+                <h3 class="pergunta-destaque">Você possui todos esses documentos em mãos?</h3>
+                <div class="grade-botoes-decisao">
+                    <button type="button" class="botao-totem-grande botao-perigo" @click="abrirPopup('sem-documentos')">
+                        Não tenho os documentos
+                    </button>
+                    <button type="button" class="botao-totem-grande botao-sucesso" @click="confirmarDocumentos">
+                        Sim, estou com todos
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- =======================================================
+             ETAPA 3: ATENDIMENTO PRIORITÁRIO
+             ======================================================= -->
+        <section v-else-if="etapaAtual === 'prioridade' && !carregando" class="totem-etapa">
+            <div class="totem-cabecalho-etapa">
+                <div class="totem-topo-etapa">
+                    <button type="button" class="botao-totem-voltar totem-voltar-topo" :disabled="carregando" @click="voltarEtapa">
+                        ← Voltar
+                    </button>
+                    <span class="totem-passo">Passo 3 de 3</span>
+                </div>
+                <h2>Tipo de Atendimento</h2>
+                <p class="totem-subtitulo">Você possui direito a atendimento prioritário (Lei Federal 10.048/00)?</p>
+            </div>
+
+            <div class="grade-botoes-decisao centralizado">
+                <button
+                    type="button"
+                    class="botao-totem-grande botao-primario"
+                    :disabled="carregando"
+                    @click="selecionarPrioridade(false)"
+                >
+                    <span class="titulo-opcao">Atendimento Convencional</span>
+                    <span class="desc-opcao">Fila padrão de atendimento</span>
+                </button>
+
+                <button
+                    type="button"
+                    class="botao-totem-grande botao-aviso"
+                    :disabled="carregando"
+                    @click="selecionarPrioridade(true)"
+                >
+                    <span class="titulo-opcao">Atendimento Prioritário</span>
+                    <span class="desc-opcao">Idosos (60+), gestantes, PcD, etc.</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- =======================================================
+             ETAPA 3.5: GERANDO SENHA (MESMO LAYOUT DO RECIBO)
+             ======================================================= -->
+        <section v-else-if="etapaAtual === 'prioridade' && carregando" class="totem-etapa centralizado">
+            <div class="recibo-senha totem-recibo">
+                <span class="etiqueta-prioridade etiqueta-normal">
+                    PROCESSANDO SOLICITAÇÃO
+                </span>
+
+                <div class="totem-spinner-container">
+                    <div class="totem-spinner" aria-label="Gerando senha"></div>
+                </div>
+
+                <div class="recibo-tipo">Gerando sua senha...</div>
+
+                <div class="info-aguardando">
+                    Aguarde um instante.
+                </div>
+
+                <div class="recibo-data" v-if="tipoSelecionado">
+                    Serviço: {{ tipoSelecionado.nome }}
+                </div>
+            </div>
+
+            <button
+                type="button"
+                disabled
+                aria-hidden="true"
+                class="botao-totem-grande botao-primario totem-botao-concluir totem-botao-oculto"
+            >
+                Concluir
+            </button>
+        </section>
+
+        <!-- =======================================================
+             ETAPA 4: RECIBO / SENHA EMITIDA
+             ======================================================= -->
+        <section v-else-if="etapaAtual === 'recibo' && senhaEmitida" class="totem-etapa centralizado">
+            <div class="recibo-senha totem-recibo">
                 <span :class="['etiqueta-prioridade', senhaEmitida.atendimentoPrioritario ? 'etiqueta-prioritaria' : 'etiqueta-normal']">
                     {{ senhaEmitida.atendimentoPrioritario ? 'ATENDIMENTO PRIORITÁRIO' : 'ATENDIMENTO CONVENCIONAL' }}
                 </span>
 
                 <div class="numero-destaque">{{ senhaEmitida.numeroDaSenha }}</div>
 
-                <div style="font-weight: 600; color: var(--cor-texto); margin-bottom: 0.5rem;">
-                    {{ senhaEmitida.tipoDeAtendimento }}
-                </div>
+                <div class="recibo-tipo">{{ senhaEmitida.tipoDeAtendimento }}</div>
 
                 <div class="info-aguardando">
                     Pessoas aguardando antes de você:
                     <strong>{{ senhaEmitida.quantidadeDePessoasAguardandoAntes }}</strong>
                 </div>
 
-                <div style="font-size: 0.85rem; color: var(--cor-texto-suave); margin-top: 1rem;">
+                <div class="recibo-data">
                     Emitida em: {{ senhaEmitida.instanteDeEmissao }}
                 </div>
-
-                <button type="button" @click="limparRecibo" class="botao botao-primario" style="margin-top: 1.5rem; width: 100%;">
-                    Emitir Nova Senha
-                </button>
             </div>
-        </section>
-    </main>
 
-    <footer class="rodape-principal">
-        Poupatempo - Emissão de Senhas
-    </footer>
+            <button
+                type="button"
+                @click="reiniciarTotem"
+                class="botao-totem-grande botao-primario totem-botao-concluir"
+            >
+                Concluir
+            </button>
+        </section>
+
+        <!-- =======================================================
+             POP-UP: USUÁRIO NÃO POSSUI OS DOCUMENTOS
+             ======================================================= -->
+        <div v-if="popupAtivo === 'sem-documentos'" class="modal-overlay" @click.self="fecharPopup">
+            <div class="modal-totem">
+                <div class="modal-icone-aviso">⚠</div>
+                <h2>Documentos Obrigatórios</h2>
+                <p>
+                    Infelizmente não é possível realizar o atendimento para
+                    <strong>{{ tipoSelecionado?.nome }}</strong> sem a documentação completa.
+                </p>
+                <p>Por favor, retorne quando estiver com todos os documentos exigidos.</p>
+                <div class="modal-botoes">
+                    <button type="button" class="botao-totem-grande botao-primario" @click="reiniciarTotem">
+                        Entendi
+                    </button>
+                    <button type="button" class="botao-totem-voltar" @click="fecharPopup">
+                        Conferir lista novamente
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
 
     <script src="js/emissaoApp.js"></script>
 </body>

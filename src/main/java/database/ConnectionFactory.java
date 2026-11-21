@@ -1,10 +1,16 @@
 package database;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConnectionFactory {
 
@@ -25,12 +31,10 @@ public class ConnectionFactory {
                 return new File(pasta, "poupatempo.db").getAbsolutePath();
             }
         }
-        // Caso esteja rodando diretamente da raiz do projeto
         File arquivoNaPastaAtual = new File("poupatempo.db");
         return arquivoNaPastaAtual.getAbsolutePath();
     }
 
-    // Executa no começo
     static {
         try {
             Class.forName("org.sqlite.JDBC");
@@ -45,93 +49,92 @@ public class ConnectionFactory {
     }
 
     private static void inicializarBancoDeDados() {
+        String scriptSql = lerArquivoBancoSql();
+        List<String> comandos = extrairComandosSql(scriptSql);
+
         try (Connection conexao = DriverManager.getConnection(URL_CONEXAO);
              Statement comando = conexao.createStatement()) {
 
             comando.execute("PRAGMA journal_mode=WAL;");
 
-            comando.execute("""
-                CREATE TABLE IF NOT EXISTS tipo_atendimento (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    nome VARCHAR(100) NOT NULL,
-                    sigla VARCHAR(10) NOT NULL
-                );
-            """);
-
-            comando.execute("""
-                CREATE TABLE IF NOT EXISTS guiche (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    numero INTEGER NOT NULL
-                );
-            """);
-
-            comando.execute("""
-                CREATE TABLE IF NOT EXISTS guiche_tipo_atendimento (
-                    guiche_id INTEGER NOT NULL,
-                    tipo_atendimento_id INTEGER NOT NULL,
-                    PRIMARY KEY (guiche_id, tipo_atendimento_id)
-                );
-            """);
-
-            comando.execute("""
-                CREATE TABLE IF NOT EXISTS senha (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    numero_formatado VARCHAR(20) NOT NULL,
-                    tipo_atendimento_id INTEGER NOT NULL,
-                    prioritario INTEGER NOT NULL,
-                    status VARCHAR(30) NOT NULL,
-                    instante_emissao VARCHAR(30) NOT NULL,
-                    instante_chamada VARCHAR(30),
-                    instante_inicio_atendimento VARCHAR(30),
-                    instante_fim_atendimento VARCHAR(30),
-                    guiche_id INTEGER
-                );
-            """);
-
-            // Carga inicial se estiver vazio
-            var resultadoContagem = comando.executeQuery("SELECT COUNT(*) FROM tipo_atendimento");
-            if (resultadoContagem.next() && resultadoContagem.getInt(1) == 0) {
-                comando.execute("INSERT INTO tipo_atendimento (id, nome, sigla) VALUES (1, 'CIN - Carteira de Identidade', 'CIN');");
-                comando.execute("INSERT INTO tipo_atendimento (id, nome, sigla) VALUES (2, 'CNH - Carteira de Motorista', 'CNH');");
-                comando.execute("INSERT INTO tipo_atendimento (id, nome, sigla) VALUES (3, 'Veículos - Licenciamento', 'VEI');");
-
-                comando.execute("INSERT INTO guiche (id, numero) VALUES (1, 1);");
-                comando.execute("INSERT INTO guiche (id, numero) VALUES (2, 2);");
-                comando.execute("INSERT INTO guiche (id, numero) VALUES (3, 3);");
-
-                comando.execute("INSERT INTO guiche_tipo_atendimento (guiche_id, tipo_atendimento_id) VALUES (1, 1);");
-                comando.execute("INSERT INTO guiche_tipo_atendimento (guiche_id, tipo_atendimento_id) VALUES (1, 2);");
-
-                comando.execute("INSERT INTO guiche_tipo_atendimento (guiche_id, tipo_atendimento_id) VALUES (2, 1);");
-                comando.execute("INSERT INTO guiche_tipo_atendimento (guiche_id, tipo_atendimento_id) VALUES (2, 2);");
-                comando.execute("INSERT INTO guiche_tipo_atendimento (guiche_id, tipo_atendimento_id) VALUES (2, 3);");
-
-                comando.execute("INSERT INTO guiche_tipo_atendimento (guiche_id, tipo_atendimento_id) VALUES (3, 3);");
-
-                comando.execute("""
-                    INSERT INTO senha (id, numero_formatado, tipo_atendimento_id, prioritario, status, instante_emissao, instante_chamada, instante_inicio_atendimento, instante_fim_atendimento, guiche_id)
-                    VALUES (1, 'CIN-001', 1, 0, 'FINALIZADA', '2026-11-15 08:30:00', '2026-11-15 08:35:00', '2026-11-15 08:36:00', '2026-11-15 08:50:00', 1);
-                """);
-                comando.execute("""
-                    INSERT INTO senha (id, numero_formatado, tipo_atendimento_id, prioritario, status, instante_emissao, instante_chamada, instante_inicio_atendimento, instante_fim_atendimento, guiche_id)
-                    VALUES (2, 'CNH-P001', 2, 1, 'FINALIZADA', '2026-11-15 08:40:00', '2026-11-15 08:45:00', '2026-11-15 08:46:00', '2026-11-15 09:05:00', 2);
-                """);
-                comando.execute("""
-                    INSERT INTO senha (id, numero_formatado, tipo_atendimento_id, prioritario, status, instante_emissao, instante_chamada, instante_inicio_atendimento, instante_fim_atendimento, guiche_id)
-                    VALUES (3, 'VEI-001', 3, 0, 'AGUARDANDO', '2026-11-15 09:10:00', NULL, NULL, NULL, NULL);
-                """);
-                comando.execute("""
-                    INSERT INTO senha (id, numero_formatado, tipo_atendimento_id, prioritario, status, instante_emissao, instante_chamada, instante_inicio_atendimento, instante_fim_atendimento, guiche_id)
-                    VALUES (4, 'CIN-P002', 1, 1, 'AGUARDANDO', '2026-11-15 09:15:00', NULL, NULL, NULL, NULL);
-                """);
-                comando.execute("""
-                    INSERT INTO senha (id, numero_formatado, tipo_atendimento_id, prioritario, status, instante_emissao, instante_chamada, instante_inicio_atendimento, instante_fim_atendimento, guiche_id)
-                    VALUES (5, 'CNH-002', 2, 0, 'AGUARDANDO', '2026-11-15 09:20:00', NULL, NULL, NULL, NULL);
-                """);
+            for (String sql : comandos) {
+                comando.execute(sql);
             }
 
         } catch (SQLException excecao) {
-            throw new RuntimeException("Erro ao inicializar o banco de dados SQLite.", excecao);
+            throw new RuntimeException("Erro ao inicializar o banco de dados a partir do banco.sql.", excecao);
         }
+    }
+
+    private static String lerArquivoBancoSql() {
+        // Procura o banco.sql na mesma pasta do .db, na raiz atual, no workspace ou no classpath
+        File pastaDoBanco = new File(CAMINHO_DO_BANCO).getParentFile();
+        File[] possiveisArquivos = {
+            new File(pastaDoBanco, "banco.sql"),
+            new File("banco.sql"),
+            new File("/workspaces/mp2_poupatempo/banco.sql")
+        };
+
+        try {
+            for (File arquivo : possiveisArquivos) {
+                if (arquivo.exists() && arquivo.isFile()) {
+                    return Files.readString(arquivo.toPath(), StandardCharsets.UTF_8);
+                }
+            }
+
+            try (InputStream stream = ConnectionFactory.class.getResourceAsStream("/banco.sql")) {
+                if (stream != null) {
+                    return new String(stream.readAllBytes(), StandardCharsets.UTF_8);
+                }
+            }
+        } catch (IOException excecao) {
+            throw new RuntimeException("Erro ao ler o arquivo banco.sql.", excecao);
+        }
+
+        throw new RuntimeException("Arquivo banco.sql não encontrado. Banco configurado em: " + CAMINHO_DO_BANCO);
+    }
+
+    // Separa os comandos por ';' ignorando comentários '--' e ';' dentro de textos '...'
+    private static List<String> extrairComandosSql(String scriptSql) {
+        List<String> comandos = new ArrayList<>();
+        StringBuilder atual = new StringBuilder();
+        boolean dentroAspasSimples = false;
+
+        for (int i = 0; i < scriptSql.length(); i++) {
+            char c = scriptSql.charAt(i);
+
+            if (!dentroAspasSimples && c == '-' && i + 1 < scriptSql.length() && scriptSql.charAt(i + 1) == '-') {
+                while (i < scriptSql.length() && scriptSql.charAt(i) != '\n') {
+                    i++;
+                }
+                continue;
+            }
+
+            if (c == '\'') {
+                if (dentroAspasSimples && i + 1 < scriptSql.length() && scriptSql.charAt(i + 1) == '\'') {
+                    atual.append("''");
+                    i++;
+                    continue;
+                }
+                dentroAspasSimples = !dentroAspasSimples;
+            }
+
+            if (!dentroAspasSimples && c == ';') {
+                String sql = atual.toString().trim();
+                if (!sql.isEmpty()) {
+                    comandos.add(sql);
+                }
+                atual.setLength(0);
+            } else {
+                atual.append(c);
+            }
+        }
+
+        String restante = atual.toString().trim();
+        if (!restante.isEmpty()) {
+            comandos.add(restante);
+        }
+
+        return comandos;
     }
 }
