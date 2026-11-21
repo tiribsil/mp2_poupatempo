@@ -1,9 +1,10 @@
 Tela emissão senha
-[ ] deixar tela do totem touch friendly
-[ ] fluxo: tipo atendimento -> docs -> prioridade? -> emitido
+[ ] colocar título emissão de senhas
+[x] deixar tela do totem touch friendly
+[x] fluxo: tipo atendimento -> docs -> prioridade? -> emitido
 [x] RG -> CIN
-[ ] tela com documentos necessários para o serviço antes de receber senha
-[ ] deixar senha parecida com o que seria de fato impresso
+[x] tela com documentos necessários para o serviço antes de receber senha
+[x] deixar senha parecida com o que seria de fato impresso
 [x] obter proximo numero considera prioridade tb
 
 tela do atendente
