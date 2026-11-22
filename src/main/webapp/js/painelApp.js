@@ -10,7 +10,10 @@ createApp({
             temporizadorDeConsulta: null,
             conectado: true,
             telaPiscando: false,
-            somDeChamada: new Audio("assets/som.mp3")
+            somDeChamada: new Audio("assets/som.mp3"),
+            filaDeEspera: [],
+            bloqueadoPorTempoMinimo: false,
+            chaveUltimaChamadaRegistrada: ""
         };
     },
     mounted() {
@@ -23,6 +26,11 @@ createApp({
         }
     },
     methods: {
+        obterChave(senha) {
+            if (!senha) return "";
+            return (senha.numeroFormatado || "") + "_" + (senha.instanteChamada || "");
+        },
+
         async atualizarPainel() {
             try {
                 const resposta = await fetch("api/painel");
@@ -30,33 +38,57 @@ createApp({
                     throw new Error("Erro na comunicação com o servidor.");
                 }
                 const dados = await resposta.json();
-
-                const anterior = this.dadosDoPainel.ultimaSenhaChamada;
-                const novo = dados.ultimaSenhaChamada;
-
-                const houveMudanca = anterior !== null && novo !== null && 
-                                     (anterior.numeroFormatado !== novo.numeroFormatado || 
-                                      anterior.instanteChamada !== novo.instanteChamada);
-
-                this.dadosDoPainel = dados;
                 this.conectado = true;
 
-                if (houveMudanca) {
-                    this.tocarSom();
-                    this.piscarTela();
+                const novaChamada = dados.ultimaSenhaChamada;
+                if (!novaChamada) return;
+
+                const chaveNova = this.obterChave(novaChamada);
+
+                if (!this.chaveUltimaChamadaRegistrada) {
+                    this.chaveUltimaChamadaRegistrada = chaveNova;
+                    this.dadosDoPainel = dados;
+                    return;
+                }
+
+                if (chaveNova !== this.chaveUltimaChamadaRegistrada) {
+                    this.chaveUltimaChamadaRegistrada = chaveNova;
+                    this.filaDeEspera.push(dados);
+                    this.processarProximaDaFila();
+                } else if (this.filaDeEspera.length === 0) {
+                    this.dadosDoPainel.ultimasSenhasChamadas = dados.ultimasSenhasChamadas;
                 }
             } catch (erro) {
                 console.error("Erro ao atualizar dados do painel:", erro);
                 this.conectado = false;
             }
         },
+
+        processarProximaDaFila() {
+            if (this.bloqueadoPorTempoMinimo || this.filaDeEspera.length === 0) {
+                return;
+            }
+
+            const proximosDados = this.filaDeEspera.shift();
+            this.dadosDoPainel = proximosDados;
+
+            this.tocarSom();
+            this.piscarTela();
+
+            this.bloqueadoPorTempoMinimo = true;
+            setTimeout(() => {
+                this.bloqueadoPorTempoMinimo = false;
+                this.processarProximaDaFila();
+            }, 5000);
+        },
+
         tocarSom() {
             this.somDeChamada.currentTime = 0;
             this.somDeChamada.play();
         },
+
         piscarTela() {
             this.telaPiscando = true;
-
             setTimeout(() => {
                 this.telaPiscando = false;
             }, 1500);

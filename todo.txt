@@ -24,4 +24,4 @@ painel de senha
 [x] tirar status
 [x] som
 [x] determinar numero máx de últimas senhas exibidas no painel
-[ ] talvez determinar que toda senha que chega deve ser exibida por ao menos por 5 segundos, então se chegar uma nova não dá pra atropelar a atual e ela não aparecer direito
+[x] talvez determinar que toda senha que chega deve ser exibida por ao menos por 5 segundos, então se chegar uma nova não dá pra atropelar a atual e ela não aparecer direito
