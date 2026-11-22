@@ -47,7 +47,11 @@ public class AtendimentoService {
         novaSenha.setInstanteEmissao(instanteAtual);
 
         Senha senhaSalva = this.senhaDAO.salvar(novaSenha);
-        int pessoasAguardandoAntes = this.senhaDAO.contarPessoasAguardandoAntes(senhaSalva.getIdentificador());
+        int pessoasAguardandoAntes = this.senhaDAO.contarPessoasAguardandoAntes(
+            senhaSalva.getIdentificador(),
+            senhaSalva.getIdentificadorTipoAtendimento(),
+            senhaSalva.isPrioritario()
+        );
 
         return new SenhaEmitidaDTO(
             senhaSalva.getNumeroFormatado(),

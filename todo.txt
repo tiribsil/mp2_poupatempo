@@ -6,8 +6,8 @@ Tela emissão senha
 [x] tela com documentos necessários para o serviço antes de receber senha
 [x] deixar senha parecida com o que seria de fato impresso
 [x] obter proximo numero considera prioridade tb
-[ ] o número de pessoas aguardando é sempre oo maior tamanho de fila que atende seu serviço?
-[ ] a lógica de pessoas aguardando antes de vc está certa para o atendimento prioritário tbm? acho q não
+[x] o número de pessoas aguardando é filtrado pelo mesmo serviço e categoria de prioridade
+[x] a lógica de pessoas aguardando antes de vc está certa para o atendimento prioritário tbm? (filtra por serviço e prioritario)
 
 tela do atendente
 [x] add espaço depois dos dois pontos - feito

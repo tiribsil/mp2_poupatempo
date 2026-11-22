@@ -81,13 +81,20 @@ public class SenhaDAO {
         }
     }
 
-    public int contarPessoasAguardandoAntes(Integer identificadorSenha) {
-        String comandoSql = "SELECT COUNT(*) FROM senha WHERE status = 'AGUARDANDO' AND id < ?";
+    public int contarPessoasAguardandoAntes(Integer identificadorSenha, Integer identificadorTipoAtendimento, boolean prioritario) {
+        StringBuilder comandoSql = new StringBuilder("SELECT COUNT(*) FROM senha WHERE status = 'AGUARDANDO' AND prioritario = ? AND id < ?");
+        if (identificadorTipoAtendimento != null) {
+            comandoSql.append(" AND tipo_atendimento_id = ?");
+        }
 
         try (Connection conexao = ConnectionFactory.getConnection();
-             PreparedStatement comandoPreparado = conexao.prepareStatement(comandoSql)) {
+             PreparedStatement comandoPreparado = conexao.prepareStatement(comandoSql.toString())) {
 
-            comandoPreparado.setInt(1, identificadorSenha);
+            comandoPreparado.setInt(1, prioritario ? 1 : 0);
+            comandoPreparado.setInt(2, identificadorSenha);
+            if (identificadorTipoAtendimento != null) {
+                comandoPreparado.setInt(3, identificadorTipoAtendimento);
+            }
 
             try (ResultSet resultado = comandoPreparado.executeQuery()) {
                 if (resultado.next()) {
@@ -99,6 +106,14 @@ public class SenhaDAO {
         } catch (SQLException excecao) {
             throw new RuntimeException("Erro ao contar pessoas aguardando antes da senha.", excecao);
         }
+    }
+
+    public int contarPessoasAguardandoAntes(Integer identificadorSenha, boolean prioritario) {
+        return contarPessoasAguardandoAntes(identificadorSenha, null, prioritario);
+    }
+
+    public int contarPessoasAguardandoAntes(Integer identificadorSenha) {
+        return contarPessoasAguardandoAntes(identificadorSenha, null, false);
     }
 
     public int contarSenhasAguardandoPorTipos(List<Integer> identificadoresTipos, Boolean apenasPrioritarias) {
