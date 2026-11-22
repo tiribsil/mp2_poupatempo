@@ -584,14 +584,21 @@ body.pagina-totem {
 body.pagina-totem .cabecalho-principal {
     padding: 0.9rem 2rem;
     flex-shrink: 0;
+    justify-content: center;
+    text-align: center;
 }
 
 body.pagina-totem .cabecalho-principal h1 {
-    font-size: 1.6rem;
+    font-size: 2rem;
+    letter-spacing: 0.5px;
 }
 
 body.pagina-totem .cabecalho-subtitulo {
-    font-size: 1rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    opacity: 0.85;
+    margin-top: 0.15rem;
 }
 
 .conteudo-totem {
