@@ -5,3 +5,5 @@
 - tela com documentos necessários para o serviço antes de receber senha
 - chamar senha de novo
 - som (painel)
+- Fila de exibição com retenção mínima de 5 segundos no painel público (impede que uma chamada atropele a anterior)
+- Escalonamento proporcional do painel público adaptado para qualquer resolução sem scroll
