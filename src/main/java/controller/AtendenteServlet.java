@@ -83,6 +83,25 @@ public class AtendenteServlet extends HttpServlet {
                 return;
             }
 
+            if ("novamente".equalsIgnoreCase(acao)) {
+                String parametroGuiche = requisicao.getParameter("numeroGuiche");
+                if (parametroGuiche == null) {
+                    resposta.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    resposta.getWriter().write(this.gson.toJson(new RespostaPadrao(false, "Número do guichê não fornecido.")));
+                    return;
+                }
+
+                Integer numeroGuiche = Integer.parseInt(parametroGuiche);
+                Senha senhaChamada = this.atendimentoService.chamarSenhaNovamente(numeroGuiche);
+
+                if (senhaChamada == null) {
+                    resposta.getWriter().write(this.gson.toJson(new RespostaPadrao(true, "Não há senhas já chamadas para este guichê.")));
+                } else {
+                    resposta.getWriter().write(this.gson.toJson(senhaChamada));
+                }
+                return;
+            }
+
             if ("iniciar".equalsIgnoreCase(acao)) {
                 Integer identificadorSenha = Integer.parseInt(requisicao.getParameter("senhaId"));
                 this.atendimentoService.iniciarAtendimento(identificadorSenha);

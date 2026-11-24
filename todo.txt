@@ -1,0 +1,27 @@
+Tela emissão senha
+[x] colocar título emissão de senhas
+[x] deixar tela do totem touch friendly
+[x] fluxo: tipo atendimento -> docs -> prioridade? -> emitido
+[x] RG -> CIN
+[x] tela com documentos necessários para o serviço antes de receber senha
+[x] deixar senha parecida com o que seria de fato impresso
+[x] obter proximo numero considera prioridade tb
+[x] o número de pessoas aguardando é filtrado pelo mesmo serviço e categoria de prioridade
+[x] a lógica de pessoas aguardando antes de vc está certa para o atendimento prioritário tbm? (filtra por serviço e prioritario)
+
+tela do atendente
+[x] add espaço depois dos dois pontos - feito
+[x] mudar "posto" pra "guiche" - feito
+[x] fila de espera (compatível -> do) guiche - feito
+[x] ordem das filas -> prioritário, convencional depois total - feito
+[x] chamar senha de novo
+
+painel de senha
+[x] diminuir faixa de cima
+[x] escalar tudo pra caber na tela (textos, caixas)
+[x] tirar tipo de serviço da tela
+[x] tirar prioridade
+[x] tirar status
+[x] som
+[x] determinar numero máx de últimas senhas exibidas no painel
+[x] talvez determinar que toda senha que chega deve ser exibida por ao menos por 5 segundos, então se chegar uma nova não dá pra atropelar a atual e ela não aparecer direito

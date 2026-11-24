@@ -12,6 +12,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SenhaDAO {
 
@@ -46,17 +48,31 @@ public class SenhaDAO {
         }
     }
 
-    public int obterProximoNumeroSequencial(Integer identificadorTipoAtendimento) {
-        String comandoSql = "SELECT COUNT(*) FROM senha WHERE tipo_atendimento_id = ?";
+    public int obterProximoNumeroSequencial(Integer identificadorTipoAtendimento, boolean prioritario) {
+        String comandoSql = """
+            SELECT numero_formatado 
+            FROM senha 
+            WHERE tipo_atendimento_id = ? 
+            AND prioritario = ? 
+            ORDER BY id DESC 
+            LIMIT 1
+        """;
 
         try (Connection conexao = ConnectionFactory.getConnection();
              PreparedStatement comandoPreparado = conexao.prepareStatement(comandoSql)) {
 
             comandoPreparado.setInt(1, identificadorTipoAtendimento);
+            comandoPreparado.setInt(2, prioritario ? 1 : 0);
 
             try (ResultSet resultado = comandoPreparado.executeQuery()) {
                 if (resultado.next()) {
-                    return resultado.getInt(1) + 1;
+                    String ultimoNumeroFormatado = resultado.getString("numero_formatado");
+                    Matcher matcher = Pattern.compile("(\\d+)$").matcher(ultimoNumeroFormatado);
+                    if (matcher.find()) {
+                        int ultimoNumero = Integer.parseInt(matcher.group(1));
+                        int proximoNumero = ultimoNumero + 1;
+                        return (proximoNumero > 999) ? 1 : proximoNumero;
+                    }
                 }
             }
             return 1;
@@ -66,13 +82,20 @@ public class SenhaDAO {
         }
     }
 
-    public int contarPessoasAguardandoAntes(Integer identificadorSenha) {
-        String comandoSql = "SELECT COUNT(*) FROM senha WHERE status = 'AGUARDANDO' AND id < ?";
+    public int contarPessoasAguardandoAntes(Integer identificadorSenha, Integer identificadorTipoAtendimento, boolean prioritario) {
+        StringBuilder comandoSql = new StringBuilder("SELECT COUNT(*) FROM senha WHERE status = 'AGUARDANDO' AND prioritario = ? AND id < ?");
+        if (identificadorTipoAtendimento != null) {
+            comandoSql.append(" AND tipo_atendimento_id = ?");
+        }
 
         try (Connection conexao = ConnectionFactory.getConnection();
-             PreparedStatement comandoPreparado = conexao.prepareStatement(comandoSql)) {
+             PreparedStatement comandoPreparado = conexao.prepareStatement(comandoSql.toString())) {
 
-            comandoPreparado.setInt(1, identificadorSenha);
+            comandoPreparado.setInt(1, prioritario ? 1 : 0);
+            comandoPreparado.setInt(2, identificadorSenha);
+            if (identificadorTipoAtendimento != null) {
+                comandoPreparado.setInt(3, identificadorTipoAtendimento);
+            }
 
             try (ResultSet resultado = comandoPreparado.executeQuery()) {
                 if (resultado.next()) {
@@ -84,6 +107,14 @@ public class SenhaDAO {
         } catch (SQLException excecao) {
             throw new RuntimeException("Erro ao contar pessoas aguardando antes da senha.", excecao);
         }
+    }
+
+    public int contarPessoasAguardandoAntes(Integer identificadorSenha, boolean prioritario) {
+        return contarPessoasAguardandoAntes(identificadorSenha, null, prioritario);
+    }
+
+    public int contarPessoasAguardandoAntes(Integer identificadorSenha) {
+        return contarPessoasAguardandoAntes(identificadorSenha, null, false);
     }
 
     public int contarSenhasAguardandoPorTipos(List<Integer> identificadoresTipos, Boolean apenasPrioritarias) {
@@ -209,6 +240,29 @@ public class SenhaDAO {
 
         } catch (SQLException excecao) {
             throw new RuntimeException("Erro ao atualizar status da senha para CHAMADA.", excecao);
+        }
+    }
+
+    public void atualizarHorarioChamadaNovamente(Integer identificadorSenha, String instanteChamada) {
+        String comandoSql = """
+            UPDATE senha
+            SET instante_chamada = ?
+            WHERE id = ? AND status = 'CHAMADA'
+        """;
+
+        try (Connection conexao = ConnectionFactory.getConnection();
+             PreparedStatement comandoPreparado = conexao.prepareStatement(comandoSql)) {
+
+            comandoPreparado.setString(1, instanteChamada);
+            comandoPreparado.setInt(2, identificadorSenha);
+
+            int linhasAfetadas = comandoPreparado.executeUpdate();
+            if (linhasAfetadas == 0) {
+                throw new IllegalStateException("A senha já iniciou o atendimento ou não está mais disponível.");
+            }
+
+        } catch (SQLException excecao) {
+            throw new RuntimeException("Erro ao atualizar horário de uma senha chamada novamente", excecao);
         }
     }
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Poupatempo - Sistema de Gerenciamento de Filas</title>
+    <title>Poupatempo</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -11,7 +11,7 @@
     <header class="cabecalho-principal">
         <div>
             <h1>POUPATEMPO</h1>
-            <div class="cabecalho-subtitulo">Sistema de Controle e Atendimento de Filas</div>
+            <div class="cabecalho-subtitulo">Sistema de Senhas</div>
         </div>
     </header>
 
@@ -19,7 +19,7 @@
         <section class="cartao" style="text-align: center; margin-bottom: 2rem;">
             <h2>Portal de Acesso às Interfaces</h2>
             <p style="color: var(--cor-texto-suave); max-width: 700px; margin: 0 auto;">
-                O sistema é composto por três interfaces independentes. Para fins de demonstração e utilização, recomenda-se abrir cada uma das interfaces abaixo em uma aba ou janela distinta do navegador.
+                Essa tela é responsável apenas para o redirecionamento para as 3 interfaces principais, apenas para fins de demonstração.
             </p>
         </section>
 
@@ -27,32 +27,28 @@
             <div class="cartao cartao-interface">
                 <div>
                     <h2>1. Totem de Emissão</h2>
-                    <p>Interface do cidadão para seleção do tipo de atendimento, declaração de prioridade e emissão da senha.</p>
+                    <p>Interface que roda em um totem touchscreen usado diretamente pelos clientes para emitir uma senha para atendimento.</p>
                 </div>
-                <a href="emissao.html" target="_blank" class="botao botao-primario">Abrir Totem de Emissão</a>
+                <a href="emissao.html" target="_blank" class="botao botao-primario">Abrir</a>
             </div>
 
             <div class="cartao cartao-interface">
                 <div>
                     <h2>2. Painel do Atendente</h2>
-                    <p>Interface dos funcionários vinculada aos guichês para chamada de senhas, início, finalização ou registro de ausência.</p>
+                    <p>Interface que roda no computador dos funcionários usada para chamar as próximas senhas de acordo com o estado da fila e o guichê.</p>
                 </div>
-                <a href="atendente.html" target="_blank" class="botao botao-primario">Abrir Painel do Atendente</a>
+                <a href="atendente.html" target="_blank" class="botao botao-primario">Abrir</a>
             </div>
 
             <div class="cartao cartao-interface">
                 <div>
                     <h2>3. Painel Público</h2>
-                    <p>Painel de exibição em tempo real das senhas chamadas e do histórico recente com atualização automática assíncrona.</p>
+                    <p>Painel de exibição em tempo real das senhas chamadas, que rodaria em um computador ligado a um televisor grande.</p>
                 </div>
-                <a href="painel.html" target="_blank" class="botao botao-primario">Abrir Painel Público</a>
+                <a href="painel.html" target="_blank" class="botao botao-primario">Abrir</a>
             </div>
         </div>
     </main>
-
-    <footer class="rodape-principal">
-        Poupatempo - Miniprojeto Web MVC com Java, Banco de Dados, Vue.js e AJAX
-    </footer>
 
 </body>
 </html>

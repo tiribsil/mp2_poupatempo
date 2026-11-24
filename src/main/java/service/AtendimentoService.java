@@ -34,7 +34,7 @@ public class AtendimentoService {
             throw new IllegalArgumentException("Tipo de atendimento não encontrado.");
         }
 
-        int proximoNumero = this.senhaDAO.obterProximoNumeroSequencial(identificadorTipoAtendimento);
+        int proximoNumero = this.senhaDAO.obterProximoNumeroSequencial(identificadorTipoAtendimento, prioritario);
         String prefixoPrioridade = prioritario ? "P" : "";
         String numeroFormatado = String.format("%s-%s%03d", tipo.getSigla(), prefixoPrioridade, proximoNumero);
         String instanteAtual = LocalDateTime.now().format(this.formatadorDeDataHora);
@@ -47,7 +47,11 @@ public class AtendimentoService {
         novaSenha.setInstanteEmissao(instanteAtual);
 
         Senha senhaSalva = this.senhaDAO.salvar(novaSenha);
-        int pessoasAguardandoAntes = this.senhaDAO.contarPessoasAguardandoAntes(senhaSalva.getIdentificador());
+        int pessoasAguardandoAntes = this.senhaDAO.contarPessoasAguardandoAntes(
+            senhaSalva.getIdentificador(),
+            senhaSalva.getIdentificadorTipoAtendimento(),
+            senhaSalva.isPrioritario()
+        );
 
         return new SenhaEmitidaDTO(
             senhaSalva.getNumeroFormatado(),
@@ -130,6 +134,30 @@ public class AtendimentoService {
         proximaSenha.setInstanteChamada(instanteChamada);
 
         return proximaSenha;
+    }
+
+    public synchronized Senha chamarSenhaNovamente(Integer numeroDoGuiche) {
+        Guiche guiche = this.guicheDAO.buscarPorNumero(numeroDoGuiche);
+        if (guiche == null) {
+            throw new IllegalArgumentException("Guichê não encontrado.");
+        }
+
+        Senha senhaAtual = this.senhaDAO.buscarSenhaAtualDoGuiche(guiche.getIdentificador());
+        if (senhaAtual == null) {
+            throw new IllegalStateException("O guichê não possui uma senha em estado chamada no momento. Chame uma nova senha");
+        }
+
+        List<Integer> identificadoresTipos = extrairIdentificadoresDeTipos(guiche);
+        if (identificadoresTipos.isEmpty()) {
+            throw new IllegalStateException("O guichê não possui tipos de atendimento configurados.");
+        }
+
+        String instanteChamada = LocalDateTime.now().format(this.formatadorDeDataHora);
+        this.senhaDAO.atualizarHorarioChamadaNovamente(senhaAtual.getIdentificador(), instanteChamada);
+
+        senhaAtual.setInstanteChamada(instanteChamada);
+
+        return senhaAtual;
     }
 
     public void iniciarAtendimento(Integer identificadorSenha) {
