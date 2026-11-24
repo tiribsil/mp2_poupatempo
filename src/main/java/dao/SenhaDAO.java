@@ -70,7 +70,8 @@ public class SenhaDAO {
                     Matcher matcher = Pattern.compile("(\\d+)$").matcher(ultimoNumeroFormatado);
                     if (matcher.find()) {
                         int ultimoNumero = Integer.parseInt(matcher.group(1));
-                        return ultimoNumero + 1;
+                        int proximoNumero = ultimoNumero + 1;
+                        return (proximoNumero > 999) ? 1 : proximoNumero;
                     }
                 }
             }
