@@ -1,7 +1,6 @@
 package controller;
 
 import com.google.gson.Gson;
-import dao.GuicheDAO;
 import dto.FilaGuicheDTO;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -18,7 +17,6 @@ import java.util.List;
 public class AtendenteServlet extends HttpServlet {
 
     private final AtendimentoService atendimentoService = new AtendimentoService();
-    private final GuicheDAO guicheDAO = new GuicheDAO();
     private final Gson gson = new Gson();
 
     @Override
@@ -29,7 +27,7 @@ public class AtendenteServlet extends HttpServlet {
 
         try {
             if ("guiches".equalsIgnoreCase(acao)) {
-                List<Guiche> listaDeGuiches = this.guicheDAO.listarTodos();
+                List<Guiche> listaDeGuiches = this.atendimentoService.listarGuiches();
                 resposta.getWriter().write(this.gson.toJson(listaDeGuiches));
                 return;
             }

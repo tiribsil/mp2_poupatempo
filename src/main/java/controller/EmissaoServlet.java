@@ -1,7 +1,6 @@
 package controller;
 
 import com.google.gson.Gson;
-import dao.TipoAtendimentoDAO;
 import dto.SenhaEmitidaDTO;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -17,14 +16,13 @@ import java.util.List;
 public class EmissaoServlet extends HttpServlet {
 
     private final AtendimentoService atendimentoService = new AtendimentoService();
-    private final TipoAtendimentoDAO tipoAtendimentoDAO = new TipoAtendimentoDAO();
     private final Gson gson = new Gson();
 
     @Override
     protected void doGet(HttpServletRequest requisicao, HttpServletResponse resposta) throws IOException {
         resposta.setContentType("application/json;charset=UTF-8");
 
-        List<TipoAtendimento> listaDeTipos = this.tipoAtendimentoDAO.listarTodos();
+        List<TipoAtendimento> listaDeTipos = this.atendimentoService.listarTiposDeAtendimento();
         resposta.getWriter().write(this.gson.toJson(listaDeTipos));
     }
 
