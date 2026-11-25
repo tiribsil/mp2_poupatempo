@@ -28,6 +28,14 @@ public class AtendimentoService {
 
     private static final Map<Integer, Integer> contadorPrioritariasConsecutivasPorGuiche = new ConcurrentHashMap<>();
 
+    public List<TipoAtendimento> listarTiposDeAtendimento() {
+        return this.tipoAtendimentoDAO.listarTodos();
+    }
+
+    public List<Guiche> listarGuiches() {
+        return this.guicheDAO.listarTodos();
+    }
+
     public SenhaEmitidaDTO emitirSenha(Integer identificadorTipoAtendimento, boolean prioritario) {
         TipoAtendimento tipo = this.tipoAtendimentoDAO.buscarPorIdentificador(identificadorTipoAtendimento);
         if (tipo == null) {
