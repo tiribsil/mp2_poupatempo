@@ -23,6 +23,7 @@ body {
     background-color: var(--cor-fundo);
     color: var(--cor-texto);
     min-height: 100vh;
+    min-height: 100dvh;
     display: flex;
     flex-direction: column;
 }
@@ -345,7 +346,9 @@ body {
 html.pagina-painel,
 body.pagina-painel {
     height: 100vh;
+    height: 100dvh;
     max-height: 100vh;
+    max-height: 100dvh;
     overflow: hidden !important;
     margin: 0;
     padding: 0;
@@ -354,19 +357,24 @@ body.pagina-painel {
 html.pagina-painel {
     /* 
        Escala proporcional contínua à resolução da tela com base em 768p (1366x768):
-       A 768px de altura: 100vh / 48 = 16px (1rem padrão do 768p).
-       A 1080px de altura: 100vh / 48 = 22.5px (+40.6%).
-       A 1440px de altura: 100vh / 48 = 30px (+87.5%).
-       A 2160px de altura (4K): 100vh / 48 = 45px (+181%).
+       A 768px de altura: 100dvh / 48 = 16px (1rem padrão do 768p).
+       A 1080px de altura: 100dvh / 48 = 22.5px (+40.6%).
+       A 1440px de altura: 100dvh / 48 = 30px (+87.5%).
+       A 2160px de altura (4K): 100dvh / 48 = 45px (+181%).
        min() garante que tanto a largura quanto a altura caibam na janela sem qualquer rolagem.
     */
     font-size: min(calc(100vh / 48), calc(100vw / 85.375));
+    font-size: min(calc(100dvh / 48), calc(100vw / 85.375));
 }
 
 body.pagina-painel {
     background-color: #0c1a2c;
     display: flex;
     flex-direction: column;
+    padding-top: env(safe-area-inset-top, 0);
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    padding-left: env(safe-area-inset-left, 0);
+    padding-right: env(safe-area-inset-right, 0);
 }
 
 body.pagina-painel .cabecalho-principal {
@@ -523,7 +531,9 @@ body.pagina-painel .cabecalho-principal h1 {
 html.pagina-totem,
 body.pagina-totem {
     height: 100vh;
+    height: 100dvh;
     max-height: 100vh;
+    max-height: 100dvh;
     overflow: hidden !important;
     margin: 0;
     padding: 0;
@@ -534,12 +544,14 @@ body.pagina-totem {
 html.pagina-totem {
     /* Mesma escala proporcional do painel público (base 1366x768 = 16px) */
     font-size: min(calc(100vh / 48), calc(100vw / 85.375));
+    font-size: min(calc(100dvh / 48), calc(100vw / 85.375));
 }
 
 /* Ajuste opcional caso o monitor do totem seja usado na VERTICAL (retrato) */
 @media (orientation: portrait) {
     html.pagina-totem {
         font-size: min(calc(100vw / 38), calc(100vh / 68));
+        font-size: min(calc(100vw / 38), calc(100dvh / 68));
     }
 }
 
@@ -547,6 +559,10 @@ body.pagina-totem {
     display: flex;
     flex-direction: column;
     background-color: var(--cor-fundo);
+    padding-top: env(safe-area-inset-top, 0);
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    padding-left: env(safe-area-inset-left, 0);
+    padding-right: env(safe-area-inset-right, 0);
 }
 
 body.pagina-totem .cabecalho-principal {
